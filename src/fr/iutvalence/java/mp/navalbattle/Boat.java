@@ -12,6 +12,8 @@ public class Boat
      */
     private int[] boatCases; // TODO créer un type coordonnées -> (x,y)
     
+    // TODO (think about it) this field is useless because this information
+    // can be retrieved from another field
     /**
      * Length of the boat
      */
