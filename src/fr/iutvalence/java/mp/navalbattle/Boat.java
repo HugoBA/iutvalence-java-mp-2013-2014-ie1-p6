@@ -12,7 +12,7 @@ public class Boat
      */
     private Case[] boatCases;
     
-    /**
+    /** 
      * Table which contains the state of each cases of the boat
      * False : not touched yet, True : touched
      */

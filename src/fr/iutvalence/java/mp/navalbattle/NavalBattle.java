@@ -39,7 +39,7 @@ public class NavalBattle
      * Initialises manually some boats for the Player1
      */
     public NavalBattle()
-    {
+    { 
         this.BoatP1 = new Boat[3];
         
         Case[] boat1Cases = new Case[2];
