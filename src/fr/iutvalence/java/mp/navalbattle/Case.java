@@ -17,9 +17,10 @@ public class Case
      */
     private int y;
     
-    // TODO (fix) detail comment
+    // TODO (FIXED) detail comment
     /**
      * Default constructor
+     * without parameters, default positions (x,y) are 0,0
      */
     public Case()
     {
