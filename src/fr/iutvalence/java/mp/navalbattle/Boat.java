@@ -6,7 +6,7 @@ package fr.iutvalence.java.mp.navalbattle;
  *
  */
 public class Boat
-{
+{ 
     /**
      * Table which contains every positions of the boat on the grid
      */

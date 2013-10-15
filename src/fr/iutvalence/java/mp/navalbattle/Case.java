@@ -6,7 +6,7 @@ package fr.iutvalence.java.mp.navalbattle;
  *
  */
 public class Case
-{ 
+{
     /**
      * Position x of the case
      */

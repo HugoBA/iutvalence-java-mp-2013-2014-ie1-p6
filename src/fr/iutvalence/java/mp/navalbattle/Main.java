@@ -14,5 +14,5 @@ public class Main
         //TODO (fix) set the player boats as parameters
         NavalBattle game = new NavalBattle();
         game.play();
-    }  
+    } 
 }
