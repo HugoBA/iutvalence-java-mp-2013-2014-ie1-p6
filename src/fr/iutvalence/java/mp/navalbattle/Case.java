@@ -17,6 +17,7 @@ public class Case
      */
     private int y;
     
+    // TODO (fix) detail comment
     /**
      * Default constructor
      */
