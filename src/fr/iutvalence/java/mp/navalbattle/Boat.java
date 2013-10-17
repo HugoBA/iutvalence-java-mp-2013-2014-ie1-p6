@@ -1,5 +1,7 @@
 package fr.iutvalence.java.mp.navalbattle;
 
+import java.util.Random;
+
 /**
  * Represents each boat
  * @author barattoh
@@ -31,6 +33,62 @@ public class Boat
        for (i = 0; i < boatCasesIn.length; i++)
            this.touchedCases[i] = false;
     } 
+   
+    /**
+     * Creates a random boat from the length given in parameter
+     * Takes random x and y positions, verifies if the boat is out of bounds or not, according to its size
+     * @param length : length of the boat
+     */
+    public Boat(int length)
+    {
+        Random rand = new Random();
+        int x, y, d, i;
+        boolean able = false;
+        x = rand.nextInt(10);
+        y = rand.nextInt(10);
+        Case[] tCases = new Case[length];
+        do
+        {
+            d = rand.nextInt(4);
+            switch(d)
+            {
+                case 0 :
+                    able = (x-length >=0);
+                    break;
+                case 1 :
+                    able = (x+length <10);
+                    break;
+                case 2 :
+                    able = (y-length >=0);
+                    break;
+                case 3 :
+                    able = (y+length <10);
+                    break;
+            }
+        }while (!able);
+        
+        tCases[0] = new Case(x,y);
+        
+        for(i=1; i< length; i++)
+        {
+            switch(d)
+            {
+                case 0 :
+                    tCases[i] = new Case(x-i,y);
+                    break;
+                case 1 :
+                    tCases[i] = new Case(x+i,y);
+                    break;
+                case 2 :
+                    tCases[i] = new Case(x,y-i);
+                    break;
+                case 3 :
+                    tCases[i] = new Case(x,y+i);
+                    break;
+            }
+        }
+        this.boatCases = tCases;        
+    }
     
     /**
      * Method that simply returns the position of the boat

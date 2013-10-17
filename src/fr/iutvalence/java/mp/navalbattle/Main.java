@@ -1,5 +1,6 @@
 package fr.iutvalence.java.mp.navalbattle;
 
+
 /**
  * main class for the naval battle game 
  * @author barattoh
@@ -7,7 +8,7 @@ package fr.iutvalence.java.mp.navalbattle;
 public class Main
 {
     /** Main method, sets the settings of the players and launches the games
-     * @param args
+     * @param args : none
      */
     public static void main(String[] args)
     {  
@@ -15,4 +16,5 @@ public class Main
         NavalBattle game = new NavalBattle();
         game.play();
     } 
+    
 }
