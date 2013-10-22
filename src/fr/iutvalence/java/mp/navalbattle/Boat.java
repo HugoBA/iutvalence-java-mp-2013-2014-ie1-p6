@@ -26,11 +26,9 @@ public class Boat
      */
     public Boat(Case[] boatCasesIn)
     {
-       int i;
        this.boatCases = boatCasesIn;
-       // TODO (FIXED) the following array is allocated but not initialized properly
        this.touchedCases = new boolean[boatCasesIn.length];
-       for (i = 0; i < boatCasesIn.length; i++)
+       for (int i = 0; i < boatCasesIn.length; i++)
            this.touchedCases[i] = false;
     } 
    
@@ -94,7 +92,7 @@ public class Boat
      * Method that simply returns the position of the boat
      * @return : Table containing all boat positions
      */
-    public Case[] getPosition()
+    public Case[] getPositions()
     {
         return this.boatCases;
     }
@@ -105,6 +103,8 @@ public class Boat
      * @param Yin : Y coord
      * @return : true if the boat is present on these coordinates, false if it isn't 
      */
+    // TODO (fix) this method should take a coordinates (Case) object as parameter
+    // TODO (fix) rename method (more explicit)
     public boolean isFull(int Xin,int Yin)
     {
         boolean res = false;

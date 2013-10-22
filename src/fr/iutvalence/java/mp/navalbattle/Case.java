@@ -5,6 +5,7 @@ package fr.iutvalence.java.mp.navalbattle;
  * @author barattoh
  *
  */
+// TODO (fix) rename this class "Coordinates"
 public class Case
 {
     /**
@@ -17,7 +18,6 @@ public class Case
      */
     private int y;
     
-    // TODO (FIXED) detail comment
     /**
      * Default constructor
      * without parameters, default positions (x,y) are 0,0
@@ -29,7 +29,7 @@ public class Case
     }
     
     /**
-     * Case constructor with position values as parameters
+     * Constructor with position values as parameters
      * @param posx : x value to set
      * @param posy : y value
      */

@@ -8,12 +8,12 @@ public class NavalBattle
     /**
      * table containing the boats of Player1
      */
-    private Boat[] BoatP1; 
+    private Boat[] player1Boats; 
     
     /**
      * table containing the boats of Player2
      */
-    //private Boat[] BoatP2; 
+    private Boat[] player2Boats; 
     
     /** 
      * launches the game
@@ -26,7 +26,7 @@ public class NavalBattle
         {
             for(j=0; j<10;j++)
             {
-                if(checkPosBoat(this.BoatP1, i, j))
+                if(checkPosBoat(this.player1Boats, i, j))
                     System.out.print("O ");
                 else
                    System.out.print("¤ ");
@@ -40,15 +40,16 @@ public class NavalBattle
      */
     public NavalBattle()
     {
-        this.BoatP1 = new Boat[5];
+        this.player1Boats = new Boat[5];
        
-        this.BoatP1[0] = new Boat(5);
-        this.BoatP1[1] = new Boat(4);
-        this.BoatP1[2] = new Boat(3);
-        this.BoatP1[3] = new Boat(3);
-        this.BoatP1[4] = new Boat(2);
+        this.player1Boats[0] = new Boat(5);
+        this.player1Boats[1] = new Boat(4);
+        this.player1Boats[2] = new Boat(3);
+        this.player1Boats[3] = new Boat(3);
+        this.player1Boats[4] = new Boat(2);
     }
     
+    // TODO fix) this method should be private
     /**
      * checks if there is a boat for a specific Player on a given position
      * @param PlayerBoats : table containing the boats of a player
