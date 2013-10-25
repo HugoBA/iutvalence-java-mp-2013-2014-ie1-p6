@@ -5,8 +5,7 @@ package fr.iutvalence.java.mp.navalbattle;
  * @author barattoh
  *
  */
-// TODO (fix) rename this class "Coordinates"
-public class Case
+public class Coordinates
 {
     /**
      * Position x of the case
@@ -22,18 +21,18 @@ public class Case
      * Default constructor
      * without parameters, default positions (x,y) are 0,0
      */
-    public Case()
+    public Coordinates()
     {
         this.x = 0;
         this.y = 0;
     }
     
     /**
-     * Constructor with position values as parameters
+     * Constructor with position values as parameters 
      * @param posx : x value to set
      * @param posy : y value
      */
-    public Case(int posx, int posy)
+    public Coordinates(int posx, int posy)
     {
         this.x = posx;
         this.y = posy;
@@ -55,5 +54,15 @@ public class Case
     public int getY()
     {
         return this.y;
+    }
+    
+    public boolean equals(Object o)
+    {
+        if (o==this) 
+            return true;
+        if(o==null)
+            return false;
+        Coordinates tmp = (Coordinates) o;
+        return (this.getX() == tmp.getX()) && (this.getY() == tmp.getY());
     }
 }

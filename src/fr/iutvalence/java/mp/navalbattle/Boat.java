@@ -12,19 +12,19 @@ public class Boat
     /**
      * Table which contains every positions of the boat on the grid
      */
-    private Case[] boatCases;
+    private Coordinates[] boatCases;
     
     /** 
      * Table which contains the state of each cases of the boat
      * False : not touched yet, True : touched
      */
-    public boolean[] touchedCases;
+    private boolean[] touchedCases;
 
     /**
      * Makes the boat : initializes boat positions, and length
      * @param boatCasesIn : table containing the boat coordinates
      */
-    public Boat(Case[] boatCasesIn)
+    public Boat(Coordinates[] boatCasesIn)
     {
        this.boatCases = boatCasesIn;
        this.touchedCases = new boolean[boatCasesIn.length];
@@ -44,7 +44,7 @@ public class Boat
         boolean able = false;
         x = rand.nextInt(10);
         y = rand.nextInt(10);
-        Case[] tCases = new Case[length];
+        Coordinates[] tCases = new Coordinates[length];
         do
         {
             d = rand.nextInt(4);
@@ -65,52 +65,96 @@ public class Boat
             }
         }while (!able);
         
-        tCases[0] = new Case(x,y);
+        tCases[0] = new Coordinates(x,y);
         
         for(i=1; i< length; i++)
         {
             switch(d)
             {
                 case 0 :
-                    tCases[i] = new Case(x-i,y);
+                    tCases[i] = new Coordinates(x-i,y);
                     break;
                 case 1 :
-                    tCases[i] = new Case(x+i,y);
+                    tCases[i] = new Coordinates(x+i,y);
                     break;
                 case 2 :
-                    tCases[i] = new Case(x,y-i);
+                    tCases[i] = new Coordinates(x,y-i);
                     break;
                 case 3 :
-                    tCases[i] = new Case(x,y+i);
+                    tCases[i] = new Coordinates(x,y+i);
                     break;
             }
         }
         this.boatCases = tCases;        
+        
+        this.touchedCases = new boolean[length];
+        for (i = 0; i < length; i++)
+            this.touchedCases[i] = false;
     }
     
     /**
      * Method that simply returns the position of the boat
      * @return : Table containing all boat positions
      */
-    public Case[] getPositions()
+    public Coordinates[] getPositions()
     {
         return this.boatCases;
     }
     
     /**
-     * method to check if the boat is concerned by a specific coordinate
-     * @param Xin : X coord
-     * @param Yin : Y coord
-     * @return : true if the boat is present on these coordinates, false if it isn't 
+     * gives the index of the case matching with the position
+     * @param casePosition : coordinates of the position
+     * @return the index if this boat is concerned by the position
+     *         else returns -1
      */
-    // TODO (fix) this method should take a coordinates (Case) object as parameter
-    // TODO (fix) rename method (more explicit)
-    public boolean isFull(int Xin,int Yin)
+    public int getIndex(Coordinates casePosition)
+    {
+        int j = 0;
+        boolean equal = false;
+        while (!equal && j < this.boatCases.length)
+        {
+            equal = this.boatCases[j].equals(casePosition);
+            j++;
+        }
+        
+        j--; //We decrement to prevent the j++ at the end of the while loop
+        if(equal)
+            return j;
+        else
+            return -1;
+    }
+    
+    
+    /**
+     * method to check if the boat is concerned by a specific coordinate
+     * @param casePos : the coordinates of the case to check
+     * @return : true if the boat is present on these coordinates, false if it isn't 
+     */  
+    public boolean isTaken(Coordinates casePos)
     {
         boolean res = false;
         int i;
         for(i = 0; i < ( this.boatCases.length); i++)
-            res = res || (this.boatCases[i].getX() == Xin && this.boatCases[i].getY() == Yin);
+            res = res || (this.boatCases[i].getX() == casePos.getX() && this.boatCases[i].getY() == casePos.getY());
         return res;
+    }
+    
+    /**
+     * method to test if a case of the boat has been touched
+     * @param caseIndex : the index of the case to check
+     * @return true if this case has been touched, else false
+     */
+    public boolean isTouched(int caseIndex)
+    {
+        return this.touchedCases[caseIndex];
+    }
+    
+    /**
+     * method to set a case of the boat as touched
+     * @param indexCase the index of the case to set
+     */
+    public void setCaseTouched(int indexCase)
+    {
+        this.touchedCases[indexCase] = true;
     }
 }
