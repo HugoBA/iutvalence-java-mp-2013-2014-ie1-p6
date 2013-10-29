@@ -10,26 +10,27 @@ import java.util.Random;
 public class Boat
 { 
     /**
-     * Table which contains every positions of the boat on the grid
+     * list of positions occupied by the boat
      */
-    private Coordinates[] boatCases;
+    private Coordinates[] positions;
     
     /** 
-     * Table which contains the state of each cases of the boat
+     * Table which contains the state of each position occupied by the boat
      * False : not touched yet, True : touched
      */
-    private boolean[] touchedCases;
+    private boolean[] touchedPositions;
 
+    // TODO (fix) rewrite comment
     /**
      * Makes the boat : initializes boat positions, and length
-     * @param boatCasesIn : table containing the boat coordinates
+     * @param positions : table containing the boat coordinates
      */
-    public Boat(Coordinates[] boatCasesIn)
+    public Boat(Coordinates[] positions)
     {
-       this.boatCases = boatCasesIn;
-       this.touchedCases = new boolean[boatCasesIn.length];
-       for (int i = 0; i < boatCasesIn.length; i++)
-           this.touchedCases[i] = false;
+       this.positions = positions;
+       this.touchedPositions = new boolean[positions.length];
+       for (int i = 0; i < positions.length; i++)
+           this.touchedPositions[i] = false;
     } 
    
     /**
@@ -85,11 +86,11 @@ public class Boat
                     break;
             }
         }
-        this.boatCases = tCases;        
+        this.positions = tCases;        
         
-        this.touchedCases = new boolean[length];
+        this.touchedPositions = new boolean[length];
         for (i = 0; i < length; i++)
-            this.touchedCases[i] = false;
+            this.touchedPositions[i] = false;
     }
     
     /**
@@ -98,7 +99,7 @@ public class Boat
      */
     public Coordinates[] getPositions()
     {
-        return this.boatCases;
+        return this.positions;
     }
     
     /**
@@ -109,11 +110,12 @@ public class Boat
      */
     public int getIndex(Coordinates casePosition)
     {
+        // TODO (fix) simplify this (you can)
         int j = 0;
         boolean equal = false;
-        while (!equal && j < this.boatCases.length)
+        while (!equal && j < this.positions.length)
         {
-            equal = this.boatCases[j].equals(casePosition);
+            equal = this.positions[j].equals(casePosition);
             j++;
         }
         
@@ -127,34 +129,34 @@ public class Boat
     
     /**
      * method to check if the boat is concerned by a specific coordinate
-     * @param casePos : the coordinates of the case to check
+     * @param position : the coordinates of the case to check
      * @return : true if the boat is present on these coordinates, false if it isn't 
      */  
-    public boolean isTaken(Coordinates casePos)
+    public boolean isOnPosition(Coordinates position)
     {
         boolean res = false;
-        int i;
-        for(i = 0; i < ( this.boatCases.length); i++)
-            res = res || (this.boatCases[i].getX() == casePos.getX() && this.boatCases[i].getY() == casePos.getY());
+        // TODO (fix) simplify by using Coordinates#equals !
+        for(int i = 0; i < ( this.positions.length); i++)
+            res = res || (this.positions[i].getX() == position.getX() && this.positions[i].getY() == position.getY());
         return res;
     }
     
     /**
      * method to test if a case of the boat has been touched
-     * @param caseIndex : the index of the case to check
+     * @param index : the index of the case to check
      * @return true if this case has been touched, else false
      */
-    public boolean isTouched(int caseIndex)
+    public boolean isHit(int index)
     {
-        return this.touchedCases[caseIndex];
+        return this.touchedPositions[index];
     }
     
     /**
      * method to set a case of the boat as touched
-     * @param indexCase the index of the case to set
+     * @param index the index of the case to set
      */
-    public void setCaseTouched(int indexCase)
+    public void setHit(int index)
     {
-        this.touchedCases[indexCase] = true;
+        this.touchedPositions[index] = true;
     }
 }

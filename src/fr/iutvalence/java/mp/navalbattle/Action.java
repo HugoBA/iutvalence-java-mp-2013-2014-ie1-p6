@@ -1,11 +1,10 @@
 package fr.iutvalence.java.mp.navalbattle;
 
 /**
- * Operation class
  * Represents an operation made by the player
  * @author Hugo
  */
-public class Operation
+public class Action
 {
     /**
      * Case concerned by the operation
@@ -26,7 +25,7 @@ public class Operation
      * @param posX : X position of the played Case
      * @param posY : Y position of the played Case
      */
-    public Operation (int posX, int posY)
+    public Action (int posX, int posY)
     {
         this.operCase = new Coordinates(posX, posY);
         this.operState = 0;

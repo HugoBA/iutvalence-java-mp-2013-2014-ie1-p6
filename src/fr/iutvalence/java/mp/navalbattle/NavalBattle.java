@@ -13,9 +13,9 @@ public class NavalBattle
     private Boat[] player1Boats; 
     
     /**
-     * table containing the operations of Player1
+     * table containing Player1 actions
      */
-    private Operation[] player1Operations; 
+    private Action[] player1Actions; 
     
     /**
      * table containing the boats of Player2
@@ -23,10 +23,11 @@ public class NavalBattle
     private Boat[] player2Boats; 
     
     /**
-     * table containing the operations of Player2
+     * table containing player2 actions
      */
-    private Operation[] player2Operations; 
+    private Action[] player2Actions; 
 
+    // TODO (fix) detail comment
     /**
      * Constructor which initializes the boats of the two players
      * @param inBoatsP1 table of the boats of Player1
@@ -34,16 +35,15 @@ public class NavalBattle
      * @param P1Operations the operation table of Player1
      * @param P2operations the operation table of Player2 
      */
-    public NavalBattle(Boat[] inBoatsP1, Boat[] inBoatsP2, Operation[] P1Operations, Operation[] P2operations)
+    public NavalBattle(Boat[] inBoatsP1, Boat[] inBoatsP2, Action[] P1Operations, Action[] P2operations)
     {
         this.player1Boats = inBoatsP1;
-        this.player1Operations = P1Operations;
+        this.player1Actions = P1Operations;
         
         this.player2Boats = inBoatsP2;
-        this.player2Operations = P2operations;
+        this.player2Actions = P2operations;
     }
-    
-    
+       
     /** 
      * launches the game
      * plays randomly the cases of the naval battle game, until a player wins
@@ -52,14 +52,15 @@ public class NavalBattle
     {
         boolean hasPlayer1lost = false;
         boolean hasPlayer2lost = false;
+       
         while(!(hasPlayer1lost || hasPlayer2lost))
         {
             
-            playRandom(this.player1Operations, this.player2Boats);
-            playRandom(this.player2Operations, this.player1Boats);
+            playRandom(this.player1Actions, this.player2Boats);
+            playRandom(this.player2Actions, this.player1Boats);
             
-            displayGrid(this.player1Boats, this.player1Operations);
-            displayGrid(this.player2Boats, this.player2Operations);
+            displayGrid(this.player1Boats, this.player1Actions);
+            displayGrid(this.player2Boats, this.player2Actions);
             
             hasPlayer1lost = didPlayerLoose(this.player1Boats);
             hasPlayer2lost = didPlayerLoose(this.player2Boats);
@@ -80,12 +81,13 @@ public class NavalBattle
     }
     
     
+    // TODO (fix) this method should be private
     /**
      * method to display the grid game of a specified player on console
      * @param BoatPlayer the boat table of the player
      * @param PlayerOperations the operation table of the player
      */
-    public void displayGrid(Boat[] BoatPlayer, Operation[] PlayerOperations)
+    public void displayGrid(Boat[] BoatPlayer, Action[] PlayerOperations)
     {
         int i, j;
         Coordinates position;
@@ -100,9 +102,9 @@ public class NavalBattle
             for(i=0; i<10;i++)
             {
                 position = new Coordinates(i,j);
-                if(checkPosBoat(BoatPlayer, BoatPlayer.length, position))
+                if(isBoatAt(BoatPlayer, BoatPlayer.length, position))
                 {
-                    if(getBoatCaseState(BoatPlayer, position))
+                    if(isBoatHitAt(BoatPlayer, position))
                         System.out.print("X ");
                     else
                         System.out.print("O ");
@@ -120,9 +122,9 @@ public class NavalBattle
             for(i=0; i<10;i++)
             {
                 position = new Coordinates(i,j);
-                if(getOperState(PlayerOperations,position) == 0)
+                if(getActionResult(PlayerOperations,position) == 0)
                     System.out.print("¤ ");
-                else if(getOperState(PlayerOperations,position) == 1)
+                else if(getActionResult(PlayerOperations,position) == 1)
                    System.out.print("+ ");
                 else
                     System.out.print("X ");
@@ -132,12 +134,13 @@ public class NavalBattle
         System.out.println("");
     }
     
+    // TODO (fix) this method should be private
     /**
      * plays a random case which hasn't been played yet
      * @param PlayerOperations : the operation of the Player WHO IS PLAYING
      * @param BoatAdvers : the boat table of HIS ADVERSARY
      */
-    public void playRandom(Operation[] PlayerOperations, Boat[] BoatAdvers)
+    public void playRandom(Action[] PlayerOperations, Boat[] BoatAdvers)
     {
         Random rand = new Random();
         int x, y;
@@ -148,15 +151,16 @@ public class NavalBattle
             x = rand.nextInt(10);
             y = rand.nextInt(10);
             randomPos = new Coordinates(x,y);
-            if(getOperState(PlayerOperations,randomPos) ==0)
+            if(getActionResult(PlayerOperations,randomPos) ==0)
             {
-                launchOperation(PlayerOperations, BoatAdvers, randomPos);
+                processAction(PlayerOperations, BoatAdvers, randomPos);
                 operOK = true;
             }
         }
         
     }
     
+    // TODO (fix) rewrite comment
     /**
      * method to "launch" the operation
      * -> sets the chosen case as 1 (=played but water) or 2 (=played and touched a boat)
@@ -165,14 +169,14 @@ public class NavalBattle
      * @param AdversaryBoats : the boat table of his adversary
      * @param OperationCoords : coordinates of the position concerned by the operation
      */
-    private void launchOperation(Operation[] PlayerOperations, Boat[] AdversaryBoats, Coordinates OperationCoords)
+    private void processAction(Action[] PlayerOperations, Boat[] AdversaryBoats, Coordinates OperationCoords)
     {
         int operState =0;
-        if(checkPosBoat(AdversaryBoats, AdversaryBoats.length, OperationCoords))
+        if(isBoatAt(AdversaryBoats, AdversaryBoats.length, OperationCoords))
         {
             operState = 2;
-            if(!getBoatCaseState(AdversaryBoats, OperationCoords));
-                setBoatState(AdversaryBoats, OperationCoords);
+            if(!isBoatHitAt(AdversaryBoats, OperationCoords));
+                setBoatHitAt(AdversaryBoats, OperationCoords);
         }
         else
             operState = 1;
@@ -188,24 +192,27 @@ public class NavalBattle
      *                    1 the position has been played but water
      *                    2 the position has been played and touched a boat
      */
-    public int getOperState(Operation[] PlayerOperations, Coordinates coords)
+    public int getActionResult(Action[] PlayerOperations, Coordinates coords)
     {
+        // TODO (fix) this is not error-proof
         return PlayerOperations[coords.getY()*10+coords.getX()].getOperState();
     }
     
+    
+    // TODO (fix) the second parameter is useless (redundant)
     /**
      * checks if there is a boat for a specific Player on a given position
      * @param PlayerBoats : table containing the boats of a player
      * @param TableLength : length of the table of boats
-     * @param positionCoords : coordinates of the position to test
+     * @param position : coordinates of the position to test
      * @return boolean : true if there is a boat, or false
      */
-    public boolean checkPosBoat(Boat[] PlayerBoats, int TableLength, Coordinates positionCoords)
+    public boolean isBoatAt(Boat[] PlayerBoats, int TableLength, Coordinates position)
     {
+        // TODO (fix) you can make it more readable
         boolean res = false;
-        int i;
-        for(i = 0; i < TableLength; i++)
-            res = res || PlayerBoats[i].isTaken(positionCoords);
+        for(int i = 0; i < TableLength; i++)
+            res = res || PlayerBoats[i].isOnPosition(position);
         return res;
     }
     
@@ -215,7 +222,7 @@ public class NavalBattle
      * @param positionCoords : The coordinates of the case to check
      * @return : True if the case of the boat has been touched, else returns false
      */
-    public boolean getBoatCaseState(Boat[] PlayerBoats, Coordinates positionCoords)
+    public boolean isBoatHitAt(Boat[] PlayerBoats, Coordinates positionCoords)
     {
         boolean res = false;
         int i, index;
@@ -223,7 +230,7 @@ public class NavalBattle
         {
             index = PlayerBoats[i].getIndex(positionCoords);
             if(index != -1)
-                res = PlayerBoats[i].isTouched(index);
+                res = PlayerBoats[i].isHit(index);
                 
         }
         return res;
@@ -234,14 +241,16 @@ public class NavalBattle
      * @param PlayerBoats the boats table of the Player
      * @param positionCoords the position of the case to set as touched
      */
-    public void setBoatState(Boat[] PlayerBoats, Coordinates positionCoords)
+    // TODO (fix) it is not very clever to pass all boat if you know chat boat has
+    // been touched
+    public void setBoatHitAt(Boat[] PlayerBoats, Coordinates positionCoords)
     {
         int i, index;
         for(i = 0; i < PlayerBoats.length; i++)
         {
             index = PlayerBoats[i].getIndex(positionCoords);
             if(index != -1)
-                PlayerBoats[i].setCaseTouched(index);
+                PlayerBoats[i].setHit(index);
                 
         }
     }
@@ -258,7 +267,7 @@ public class NavalBattle
         {
             for(int j=0; j< playerBoats[i].getPositions().length; j++)
             {
-                lost = lost && playerBoats[i].isTouched(j);
+                lost = lost && playerBoats[i].isHit(j);
             }
         }
         return lost;

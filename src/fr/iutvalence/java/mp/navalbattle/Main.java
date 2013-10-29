@@ -12,7 +12,7 @@ public class Main
     public static void main(String[] args)
     {  
         Boat[] boatsP1, boatsP2;
-        Operation[] operP1, operP2;
+        Action[] operP1, operP2;
         boatsP1 = createRandomBoats();
         boatsP2 = createRandomBoats();
         operP1 = createOperTable();
@@ -26,15 +26,15 @@ public class Main
      * Method to create an operation table
      * @return the operation table just created
      */
-    private static Operation[] createOperTable()
+    private static Action[] createOperTable()
     {
-        Operation[] operTable = new Operation[100];
+        Action[] operTable = new Action[100];
         int i, j;
         for (j=0; j<10; j++)
         {
             for (i=0; i<10; i++)
             {
-                operTable[(j*10+i)] = new Operation(i,j);
+                operTable[(j*10+i)] = new Action(i,j);
             }
         }
         return operTable;
@@ -83,7 +83,7 @@ public class Main
         boolean res = false;
         int i;
         for(i = 0; i < TableLength; i++)
-            res = res || PlayerBoats[i].isTaken(positionCoords);
+            res = res || PlayerBoats[i].isOnPosition(positionCoords);
         return res;
     }
     
