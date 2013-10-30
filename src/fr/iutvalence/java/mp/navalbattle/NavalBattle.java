@@ -53,6 +53,8 @@ public class NavalBattle
         boolean hasPlayer1lost = false;
         boolean hasPlayer2lost = false;
        
+        // TODO (fix) consider that the loop allows only the current player to play
+        // here, it is a player1+player2 loop
         while(!(hasPlayer1lost || hasPlayer2lost))
         {
             
@@ -135,11 +137,15 @@ public class NavalBattle
     }
     
     // TODO (fix) this method should be private
+    // TODO (fix) consider passing a playerNumber instead of the whole list of boats
+    // TODO (fix) second parameter is useless
     /**
      * plays a random case which hasn't been played yet
      * @param PlayerOperations : the operation of the Player WHO IS PLAYING
      * @param BoatAdvers : the boat table of HIS ADVERSARY
      */
+    // TODO (fix) separate (in two methods) the choice of the position where to shoot from the 
+    // processing of the shot itself 
     public void playRandom(Action[] PlayerOperations, Boat[] BoatAdvers)
     {
         Random rand = new Random();
@@ -192,6 +198,8 @@ public class NavalBattle
      *                    1 the position has been played but water
      *                    2 the position has been played and touched a boat
      */
+    // TODO (fix) this method should be private
+    // TODO (fix) consider passing a playerNumber instead of the whole list of boats
     public int getActionResult(Action[] PlayerOperations, Coordinates coords)
     {
         // TODO (fix) this is not error-proof
@@ -200,6 +208,7 @@ public class NavalBattle
     
     
     // TODO (fix) the second parameter is useless (redundant)
+    // TODO (fix) this method should be private
     /**
      * checks if there is a boat for a specific Player on a given position
      * @param PlayerBoats : table containing the boats of a player
@@ -222,6 +231,8 @@ public class NavalBattle
      * @param positionCoords : The coordinates of the case to check
      * @return : True if the case of the boat has been touched, else returns false
      */
+    // TODO (fix) this method should be private
+    // TODO (fix) consider passing a playerNumber instead of the whole list of boats
     public boolean isBoatHitAt(Boat[] PlayerBoats, Coordinates positionCoords)
     {
         boolean res = false;
@@ -241,6 +252,7 @@ public class NavalBattle
      * @param PlayerBoats the boats table of the Player
      * @param positionCoords the position of the case to set as touched
      */
+    // TODO (fix) this method should be private
     // TODO (fix) it is not very clever to pass all boat if you know chat boat has
     // been touched
     public void setBoatHitAt(Boat[] PlayerBoats, Coordinates positionCoords)
@@ -255,11 +267,13 @@ public class NavalBattle
         }
     }
     
+    // TODO (fix) this method should be private
+    // TODO (fix) consider passing a playerNumber instead of the whole list of boats
     /**
      * returns if all the boats of a player have been sunk, or not
      * @param playerBoats : the boats table of a player
      * @return boolean, true if all the boats have been sunk, else returns false
-     */
+     */    
     public boolean didPlayerLoose(Boat[] playerBoats)
     {
         boolean lost = true;
