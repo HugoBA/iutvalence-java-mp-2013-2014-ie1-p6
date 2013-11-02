@@ -12,34 +12,13 @@ public class Main
     public static void main(String[] args)
     {  
         Boat[] boatsP1, boatsP2;
-        Action[] operP1, operP2;
         boatsP1 = createRandomBoats();
         boatsP2 = createRandomBoats();
-        operP1 = createOperTable();
-        operP2 = createOperTable(); 
         
-        NavalBattle game = new NavalBattle(boatsP1, boatsP2, operP1, operP2);
+        NavalBattle game = new NavalBattle(boatsP1, boatsP2);
         game.play();
-    } 
-    
-    /**
-     * Method to create an operation table
-     * @return the operation table just created
-     */
-    private static Action[] createOperTable()
-    {
-        Action[] operTable = new Action[100];
-        int i, j;
-        for (j=0; j<10; j++)
-        {
-            for (i=0; i<10; i++)
-            {
-                operTable[(j*10+i)] = new Action(i,j);
-            }
-        }
-        return operTable;
     }
-
+    
     /**
      * method to make a table of random boats
      * @return table of boats, randomly created

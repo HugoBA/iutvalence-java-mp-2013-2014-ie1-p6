@@ -56,9 +56,16 @@ public class Coordinates
         return this.y;
     }
     
-    // TODO (fix) override hashCode
+    // TODO (fixed) override hashCode
+    public int hashCode()
+    {
+        return (this.x *10 + this.y);
+    }
     
-    // TODO (fix) write comment (say how coordinates are considered to be the same)
+    // TODO (fixed) write comment (say how coordinates are considered to be the same)
+    /**
+     * Compare coordinates : if 2 Coordinates have the same X and the same Y, they are equals
+     */
     public boolean equals(Object o)
     {
         if (o==this) 

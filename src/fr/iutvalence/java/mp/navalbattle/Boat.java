@@ -20,9 +20,9 @@ public class Boat
      */
     private boolean[] touchedPositions;
 
-    // TODO (fix) rewrite comment
+    // TODO (fixed) rewrite comment
     /**
-     * Makes the boat : initializes boat positions, and length
+     * Create a boat by giving its coordinates
      * @param positions : table containing the boat coordinates
      */
     public Boat(Coordinates[] positions)
@@ -120,7 +120,7 @@ public class Boat
         }
         
         j--; //We decrement to prevent the j++ at the end of the while loop
-        if(equal)
+        if(this.positions[j].equals(casePosition))
             return j;
         else
             return -1;
@@ -135,9 +135,9 @@ public class Boat
     public boolean isOnPosition(Coordinates position)
     {
         boolean res = false;
-        // TODO (fix) simplify by using Coordinates#equals !
+        // TODO (fixed) simplify by using Coordinates#equals !
         for(int i = 0; i < ( this.positions.length); i++)
-            res = res || (this.positions[i].getX() == position.getX() && this.positions[i].getY() == position.getY());
+            res = res || (this.positions[i].equals(position));
         return res;
     }
     
