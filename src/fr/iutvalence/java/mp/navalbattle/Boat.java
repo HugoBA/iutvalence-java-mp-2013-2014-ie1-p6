@@ -13,13 +13,7 @@ public class Boat
     /**
      * list of positions occupied by the boat
      */
-    private Coordinates[] positions;
-
-    /**
-     * Table which contains the state of each position occupied by the boat
-     * False : not touched yet, True : touched
-     */
-    private boolean[] touchedPositions;
+    private BoatCellCoordinates[] positions;
 
     /**
      * Create a boat by giving its coordinates
@@ -27,12 +21,9 @@ public class Boat
      * @param positions
      *            : table containing the boat coordinates
      */
-    public Boat(Coordinates[] positions)
+    public Boat(BoatCellCoordinates[] positions)
     {
         this.positions = positions;
-        this.touchedPositions = new boolean[positions.length];
-        for (int i = 0; i < positions.length; i++)
-            this.touchedPositions[i] = false;
     }
 
     /**
@@ -46,62 +37,57 @@ public class Boat
     public Boat(int length)
     {
         Random rand = new Random();
-        // TODO (fix) rename fields i and d
-        int x, y, d, i;
+        // TODO (fixed) rename fields i and d
+        int direction = rand.nextInt(4);
+        // TODO (fixed) declare hard-coded values as constants
+        int x,y;
         boolean able = false;
-        // TODO (fix) declare hard-coded values as constants
-        x = rand.nextInt(10);
-        y = rand.nextInt(10);
-        // TODO (fix) avoid using a temp variable
-        Coordinates[] tCases = new Coordinates[length];
+        
+        // TODO (fixed) avoid using a temp variable
+        this.positions = new BoatCellCoordinates[length];
+        
         do
         {
-            // TODO (fix) declare hard-coded values as constants
-            d = rand.nextInt(4);
-            switch (d)
+            x =  rand.nextInt(NavalBattle.GRIDSIZE);
+            y =  rand.nextInt(NavalBattle.GRIDSIZE);
+            switch (direction)
             {
             case 0:
-                able = (x - length >= 0);
+                able = ((x - length) >= 0);
                 break;
             case 1:
-                // TODO (fix) declare hard-coded values as constants
-                able = (x + length < 10);
+                able = ((x + length) < NavalBattle.GRIDSIZE);
                 break;
             case 2:
-                able = (y - length >= 0);
+                able = ((y - length) >= 0);
                 break;
             case 3:
-                able = (y + length < 10);
+                able = ((y + length) < NavalBattle.GRIDSIZE);
                 break;
             }
         }
         while (!able);
+        this.positions[0] = new BoatCellCoordinates(x, y);
 
-        tCases[0] = new Coordinates(x, y);
-
+        int i;
         for (i = 1; i < length; i++)
         {
-            switch (d)
+            switch (direction)
             {
             case 0:
-                tCases[i] = new Coordinates(x - i, y);
+                this.positions[i] = new BoatCellCoordinates(x - i, y);
                 break;
             case 1:
-                tCases[i] = new Coordinates(x + i, y);
+                this.positions[i] = new BoatCellCoordinates(x + i, y);
                 break;
             case 2:
-                tCases[i] = new Coordinates(x, y - i);
+                this.positions[i] = new BoatCellCoordinates(x, y - i);
                 break;
             case 3:
-                tCases[i] = new Coordinates(x, y + i);
+                this.positions[i] = new BoatCellCoordinates(x, y + i);
                 break;
             }
         }
-        this.positions = tCases;
-
-        this.touchedPositions = new boolean[length];
-        for (i = 0; i < length; i++)
-            this.touchedPositions[i] = false;
     }
 
     /**
@@ -109,36 +95,9 @@ public class Boat
      * 
      * @return : Table containing all boat positions
      */
-    public Coordinates[] getPositions()
+    public BoatCellCoordinates[] getPositions()
     {
         return this.positions;
-    }
-
-    /**
-     * gives the index of the case matching with the position
-     * 
-     * @param casePosition
-     *            : coordinates of the position
-     * @return the index if this boat is concerned by the position else returns
-     *         -1
-     */
-    // TODO (fix) declare this method as private  
-    public int getIndex(Coordinates casePosition)
-    {
-        // TODO (fix) simplify this (you can)
-        int j = 0;
-        boolean equal = false;
-        while (!equal && j < this.positions.length)
-        {
-            equal = this.positions[j].equals(casePosition);
-            j++;
-        }
-
-        j--; // We decrement to prevent the j++ at the end of the while loop
-        if (this.positions[j].equals(casePosition))
-            return j;
-        else
-            return -1;
     }
 
     /**
@@ -151,35 +110,8 @@ public class Boat
      */
     public boolean isOnPosition(Coordinates position)
     {
-        // TODO (fix) avoid using a temp boolean
-        boolean res = false;
         for (int i = 0; i < (this.positions.length); i++)
-            res = res || (this.positions[i].equals(position));
-        return res;
-    }
-
-    /**
-     * method to test if a case of the boat has been touched
-     * 
-     * @param index
-     *            : the index of the case to check
-     * @return true if this case has been touched, else false
-     */
-    // TODO (fix) replace the int parameter by a Coordinates object
-    public boolean isHit(int index)
-    {
-        return this.touchedPositions[index];
-    }
-
-    /**
-     * method to set a case of the boat as touched
-     * 
-     * @param index
-     *            the index of the case to set
-     */
-    // TODO (fix) replace the int parameter by a Coordinates object
-    public void setHit(int index)
-    {
-        this.touchedPositions[index] = true;
+            if (this.positions[i].equals(position)) return true;
+        return false;
     }
 }

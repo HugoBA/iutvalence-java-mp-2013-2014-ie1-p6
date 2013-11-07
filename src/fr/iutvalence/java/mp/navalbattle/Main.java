@@ -19,9 +19,9 @@ public class Main
         Boat[] boatsP1, boatsP2;
         boatsP1 = createRandomBoats();
         boatsP2 = createRandomBoats();
-
         NavalBattle game = new NavalBattle(boatsP1, boatsP2);
         game.play();
+        
     }
 
     /**
@@ -34,7 +34,7 @@ public class Main
         int[] BoatLengths = { 5, 4, 3, 3, 2 };
         int i = 0, newX, newY;
         boolean isBusy;
-        Coordinates position;
+        BoatCellCoordinates position;
 
         Boat[] newBoat = new Boat[5];
 
@@ -46,7 +46,7 @@ public class Main
             {
                 newX = newBoat[i].getPositions()[i2].getX();
                 newY = newBoat[i].getPositions()[i2].getY();
-                position = new Coordinates(newX, newY);
+                position = new BoatCellCoordinates(newX, newY);
                 isBusy = isBusy | checkPosBoat(newBoat, i, position);
             }
             if (!isBusy)

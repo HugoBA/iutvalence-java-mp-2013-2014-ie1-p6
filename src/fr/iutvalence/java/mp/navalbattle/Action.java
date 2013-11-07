@@ -5,6 +5,7 @@ package fr.iutvalence.java.mp.navalbattle;
  * 
  * @author Hugo
  */
+
 public class Action
 {
     /**
@@ -13,24 +14,21 @@ public class Action
     private Coordinates coordinates;
 
     /**
-     * State of the operation 0 : not played yet 1 : touched in the water 2 :
-     * touched a boat
+     * State of the operation 
      */
-    private int state;
+    private PositionState state;
 
     /**
      * Operation constructor
      * 
-     * @param posX
-     *            : X position of the played Case
-     * @param posY
-     *            : Y position of the played Case
+     * @param position
+     *            : X and Y positions of the played Case
      */
-    // TODO (fix) replace the two parameters by a single Coordinates
-    public Action(int posX, int posY)
+    // TODO (fixed) replace the two parameters by a single Coordinates
+    public Action(Coordinates position)
     {
-        this.coordinates = new Coordinates(posX, posY);
-        this.state = 0;
+        this.coordinates = position;
+        this.state = PositionState.UNSHOT;
     }
 
     /**
@@ -48,7 +46,7 @@ public class Action
      * 
      * @return integer, the state of the operation
      */
-    public int getState()
+    public PositionState getState()
     {
         return this.state;
     }
@@ -59,7 +57,7 @@ public class Action
      * @param State
      *            : the new state of the operation
      */
-    public void setState(int State)
+    public void setState(PositionState State)
     {
         this.state = State;
     }

@@ -13,12 +13,12 @@ public class Player
      */
     private Boat[] boats;
 
-    // TODO (fix) you should declare as a 2D array of enumerated values
-    // TODO (fix) this field should be declared as private
+    // TODO (fixed) you should declare as a 2D array of enumerated values
+    // TODO (fixed) this field should be declared as private
     /**
      * Player's actions
      */
-    public Action[] actions;
+    private Action[][] actions;
 
     /**
      * Constructor for a player
@@ -29,23 +29,22 @@ public class Player
      */
     public Player(Boat[] playerBoats)
     {
-        // TODO (fix) declare hard-coded values as constants
-        // TODO (fix) avoid using a temp variable
-        Action[] operTable = new Action[100];
+        // TODO (fixed) declare hard-coded values as constants
+        // TODO (fixed) avoid using a temp variable
+        this.actions =  new Action[NavalBattle.GRIDSIZE][NavalBattle.GRIDSIZE];
+        Coordinates position;
 
-        // TODO (fix) rename local variables (more explicit)
-        // TODO (fix) declare local variable inside loop initializer
-        int i, j;
-        // TODO (fix) declare hard-coded values as constants
-        for (j = 0; j < 10; j++)
+        // TODO (fixed) rename local variables (more explicit)
+        // TODO (fixed) declare local variable inside loop initializer
+        for (int y = 0; y < NavalBattle.GRIDSIZE; y++)
         {
-            for (i = 0; i < 10; i++)
+            for (int x = 0; x < NavalBattle.GRIDSIZE; x++)
             {
-                operTable[(j * 10 + i)] = new Action(i, j);
+                position = new Coordinates(x,y);
+                this.actions[y][x] = new Action(position);
             }
         }
 
-        this.actions = operTable;
         this.boats = playerBoats;
     }
 
@@ -60,6 +59,15 @@ public class Player
     }
 
     /**
+     * returns the Action table of the player
+     * @return the action table
+     */
+    public Action[][] getActions()
+    {
+        return this.actions;
+    }
+
+    /**
      * Check if the player has lost the game
      * 
      * @return : True if all the boat of the player are sunk
@@ -71,9 +79,10 @@ public class Player
         {
             for (int j = 0; j < this.boats[i].getPositions().length; j++)
             {
-                lost = lost && this.boats[i].isHit(j);
+                lost = lost && this.boats[i].getPositions()[j].isBoatCaseTouched();
             }
         }
         return lost;
     }
+    
 }

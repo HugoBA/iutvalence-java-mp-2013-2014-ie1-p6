@@ -16,16 +16,25 @@ public class NavalBattle
      * Value for Player2
      */
     public final static int PLAYER2 = 1;
+    
+    /**
+     * Max size for the game grid (X and Y)
+     */
+    public final static int GRIDSIZE = 10;
 
     /**
      * the players
      */
     private Player[] players;
 
-    // TODO (fix) detail comment (how is the game once created?)
+    // TODO (fixed) detail comment (how is the game once created?)
     /**
      * Constructor which initializes the boats of the two players and the grid
      * of what they have done (Operations)
+     * Once created, each player owns a Boats table (initialized as untouched) 
+     * and an Action table (initialized as unshot)
+     * The method play automatically plays a random action for each player
+     * It goes on and on until all the boats of a player are sunk
      * 
      * @param player1Boats
      *            : table containing the boats of Player1
@@ -34,11 +43,10 @@ public class NavalBattle
      */
     public NavalBattle(Boat[] player1Boats, Boat[] player2Boats)
     {
-        // TODO (fix) avoird using a temp variable
-        Player[] tempPlayers = new Player[2];
-        tempPlayers[0] = new Player(player1Boats);
-        tempPlayers[1] = new Player(player2Boats);
-        this.players = tempPlayers;
+        // TODO (fixed) avoid using a temp variable
+        this.players = new Player[2];
+        this.players[0] = new Player(player1Boats);
+        this.players[1] = new Player(player2Boats);
     }
 
     /**
@@ -48,27 +56,31 @@ public class NavalBattle
     public void play()
     {
 
-        // TODO (fix) consider that the loop allows only the current player to
+        int currentPlayer = PLAYER1;
+        // TODO (fixed) consider that the loop allows only the current player to
         // play
         // here, it is a player1+player2 loop
-        while (!(this.players[0].didPlayerLoose() || this.players[1].didPlayerLoose()))
+        while (!(this.players[currentPlayer].didPlayerLoose()))
         {
+            displayPlayerGrid(currentPlayer);
+            processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
 
-            playRandom(PLAYER1);
-            playRandom(PLAYER2);
-
-            displayPlayerGrid(PLAYER1);
-            displayPlayerGrid(PLAYER2);
             try
             {
-                Thread.sleep(100);
+                Thread.sleep(50);
             }
             catch (InterruptedException e)
             {
                 Thread.currentThread().interrupt();
             }
+            if (currentPlayer == PLAYER1)
+                currentPlayer = PLAYER2;
+            else
+                currentPlayer = PLAYER1;
         }
-        if (this.players[1].didPlayerLoose())
+        displayPlayerGrid(PLAYER1);
+        displayPlayerGrid(PLAYER2);
+        if (this.players[PLAYER1].didPlayerLoose())
             System.out.println("Player 2 won!");
         else
             System.out.println("Player 1 won!");
@@ -87,13 +99,13 @@ public class NavalBattle
         Coordinates position;
 
         System.out.println("   A B C D E F G H I J        A B C D E F G H I J");
-        for (j = 0; j < 10; j++)
+        for (j = 0; j < GRIDSIZE; j++)
         {
-            if (j + 1 < 10)
+            if (j + 1 < GRIDSIZE)
                 System.out.print(" " + (j + 1) + " ");
             else
                 System.out.print((j + 1) + " ");
-            for (i = 0; i < 10; i++)
+            for (i = 0; i < GRIDSIZE; i++)
             {
                 position = new Coordinates(i, j);
                 if (isBoatOnPlayerBoatGridAt(playerNumber, position))
@@ -108,16 +120,16 @@ public class NavalBattle
             }
 
             System.out.print("    ");
-            if (j + 1 < 10)
+            if (j + 1 < GRIDSIZE)
                 System.out.print(" " + (j + 1) + " ");
             else
                 System.out.print((j + 1) + " ");
-            for (i = 0; i < 10; i++)
+            for (i = 0; i < GRIDSIZE; i++)
             {
                 position = new Coordinates(i, j);
-                if (getCellStateFromPlayerShotGrid(playerNumber, position) == 0)
+                if (getCellStateFromPlayerShotGrid(playerNumber, position) == PositionState.UNSHOT)
                     System.out.print("¤ ");
-                else if (getCellStateFromPlayerShotGrid(playerNumber, position) == 1)
+                else if (getCellStateFromPlayerShotGrid(playerNumber, position) == PositionState.INWATER)
                     System.out.print("+ ");
                 else
                     System.out.print("X ");
@@ -125,25 +137,6 @@ public class NavalBattle
             System.out.println("");
         }
         System.out.println("");
-    }
-
-    /**
-     * plays a random case which hasn't been played yet
-     * 
-     * @param playerNumber
-     *            : The number of the player
-     */
-    // TODO (fix) call processAction from the play method
-    private void playRandom(int playerNumber)
-    {
-        int otherPlayerNumber;
-
-        if (playerNumber == PLAYER1)
-            otherPlayerNumber = PLAYER2;
-        else
-            otherPlayerNumber = PLAYER1;
-
-        processPlayerShot(playerNumber, otherPlayerNumber, getRandomFreeCellCoordinatesFromPlayerShotGrid(playerNumber));
     }
 
     /**
@@ -155,19 +148,16 @@ public class NavalBattle
      */
     public Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
     {
-        // TODO (fix) in Java, you can declare local variable where you
+        // TODO (fixed) in Java, you can declare local variable where you
         // use it for the first time
         Random rand = new Random();
-        int x, y;
         Coordinates randomPos;
         do
         {
-            x = rand.nextInt(10);
-            y = rand.nextInt(10);
-            randomPos = new Coordinates(x, y);
+            randomPos = new Coordinates(rand.nextInt(GRIDSIZE), rand.nextInt(GRIDSIZE));
         }
-        // TODO (fix) declare hard-coded values as constant (0)
-        while (!(getCellStateFromPlayerShotGrid(playerNumber, randomPos) == 0));
+        // TODO (fixed) declare hard-coded values as constant (0)
+        while (!(getCellStateFromPlayerShotGrid(playerNumber, randomPos) == PositionState.UNSHOT));
 
         return randomPos;
     }
@@ -179,31 +169,31 @@ public class NavalBattle
      * 
      * @param playerNumber
      *            : The number of the player
-     * @param otherPlayerNumber
-     *            : the number of his adversary
      * @param coordinates
      *            : coordinates of the position concerned by the operation
      */
-    private void processPlayerShot(int playerNumber, int otherPlayerNumber, Coordinates coordinates)
+    private void processPlayerShot(int playerNumber, Coordinates coordinates)
     {
-        // TODO (fix) rename variable (more explicit)
-        int operState = 0;
+        int otherPlayerNumber;
+        if (playerNumber == PLAYER1)
+            otherPlayerNumber=PLAYER2;
+        else
+            otherPlayerNumber=PLAYER1;
+        
+        // TODO (fixed) rename variable (more explicit)
+        PositionState actionState = PositionState.UNSHOT;
         if (isBoatOnPlayerBoatGridAt(otherPlayerNumber, coordinates))
         {
-            // TODO (fix) declare hard-coded values as constants
-            operState = 2;
-            
-            // TODO (fix) fix the following test, it is dirty
-            if (!isBoatHitAt(otherPlayerNumber, coordinates))
-                ;
+            // TODO (fixed) declare hard-coded values as constants
+            actionState = PositionState.ONBOAT;
             setBoatHitOnPlayerBoatGridAt(otherPlayerNumber, coordinates);
         }
         else
-            // TODO (fix) declare hard-coded values as constants
-            operState = 1;
+            // TODO (fixed) declare hard-coded values as constants
+            actionState = PositionState.INWATER;
 
-        // TODO (fix) declare hard-coded values as constants
-        this.players[playerNumber].actions[coordinates.getY() * 10 + coordinates.getX()].setState(operState);
+        // TODO (fixed) declare hard-coded values as constants 
+        this.players[playerNumber].getActions()[coordinates.getY()][coordinates.getX()].setState(actionState);
     }
 
     /**
@@ -217,10 +207,10 @@ public class NavalBattle
      *         has been played but water 2 the position has been played and
      *         touched a boat
      */
-    private int getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords)
+    private PositionState getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords)
     {
-        // TODO (fix) this is not error-proof
-        return this.players[playerNumber].actions[coords.getY() * 10 + coords.getX()].getState();
+        // TODO (fixed) this is not error-proof
+        return this.players[playerNumber].getActions()[coords.getY()][coords.getX()].getState();
     }
 
     /**
@@ -234,13 +224,14 @@ public class NavalBattle
      */
     private boolean isBoatOnPlayerBoatGridAt(int playerNumber, Coordinates position)
     {
-        // TODO (fix) you can make it more readable
-        boolean res = false;
-
+        // TODO (fixed) you can make it more readable
         for (int i = 0; i < this.players[playerNumber].getBoats().length; i++)
-            res = res || this.players[playerNumber].getBoats()[i].isOnPosition(position);
+        {
+            if(this.players[playerNumber].getBoats()[i].isOnPosition(position))
+                return true;
+        }
 
-        return res;
+        return false;
     }
 
     /**
@@ -255,16 +246,21 @@ public class NavalBattle
      */
     private boolean isBoatHitAt(int playerNumber, Coordinates positionCoords)
     {
-        boolean res = false;
-        int i, index;
-        for (i = 0; i < this.players[playerNumber].getBoats().length; i++)
+        BoatCellCoordinates currentPosition;
+        for (int i = 0; i < this.players[playerNumber].getBoats().length; i++)
         {
-            index = this.players[playerNumber].getBoats()[i].getIndex(positionCoords);
-            if (index != -1)
-                res = this.players[playerNumber].getBoats()[i].isHit(index);
-
+            
+            for(int j=0; j< this.players[playerNumber].getBoats()[i].getPositions().length; j++)
+            {                
+                currentPosition = this.players[playerNumber].getBoats()[i].getPositions()[j];
+                
+                if(currentPosition.getX() == positionCoords.getX() 
+                        && currentPosition.getY() == positionCoords.getY()
+                        && currentPosition.isBoatCaseTouched() == true)
+                    return true;
+            }
         }
-        return res;
+        return false;
     }
 
     /**
@@ -277,12 +273,17 @@ public class NavalBattle
      */
     private void setBoatHitOnPlayerBoatGridAt(int playerNumber, Coordinates coordinates)
     {
-        int i, index;
-        for (i = 0; i < this.players[playerNumber].getBoats().length; i++)
+        BoatCellCoordinates currentPosition;
+        for (int i = 0; i < this.players[playerNumber].getBoats().length; i++)
         {
-            index = this.players[playerNumber].getBoats()[i].getIndex(coordinates);
-            if (index != -1)
-                this.players[playerNumber].getBoats()[i].setHit(index);
+            
+            for(int j=0; j< this.players[playerNumber].getBoats()[i].getPositions().length; j++)
+            {                
+                currentPosition = this.players[playerNumber].getBoats()[i].getPositions()[j];
+                
+                if(currentPosition.getX() == coordinates.getX() && currentPosition.getY() == coordinates.getY())
+                    currentPosition.setBoatCaseTouched();
+            }
         }
     }
 }
