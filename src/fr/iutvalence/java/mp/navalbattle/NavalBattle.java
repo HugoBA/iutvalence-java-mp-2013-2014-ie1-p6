@@ -23,7 +23,7 @@ public class NavalBattle
     public final static int GRIDSIZE = 10;
 
     /**
-     * the players
+     * The players
      */
     private Player[] players;
 
@@ -127,12 +127,20 @@ public class NavalBattle
             for (i = 0; i < GRIDSIZE; i++)
             {
                 position = new Coordinates(i, j);
-                if (getCellStateFromPlayerShotGrid(playerNumber, position) == PositionState.UNSHOT)
-                    System.out.print("¤ ");
-                else if (getCellStateFromPlayerShotGrid(playerNumber, position) == PositionState.INWATER)
-                    System.out.print("+ ");
-                else
-                    System.out.print("X ");
+                try
+                {
+                    Action actionPostion = new Action(position, PositionState.INWATER);
+                    if (this.players[playerNumber].getActions().indexOf(actionPostion) == -1)
+                        System.out.print("¤ ");
+                    else if (getCellStateFromPlayerShotGrid(playerNumber, position) == PositionState.INWATER)
+                        System.out.print("+ ");
+                    else
+                        System.out.print("X ");
+                }
+                catch(UndefinedCaseStateException e)
+                {
+                    e.printStackTrace();
+                }
             }
             System.out.println("");
         }
@@ -151,15 +159,17 @@ public class NavalBattle
         // TODO (fixed) in Java, you can declare local variable where you
         // use it for the first time
         Random rand = new Random();
-        Coordinates randomPos;
+        Coordinates randomXY;
+        Action randomPos;
         do
         {
-            randomPos = new Coordinates(rand.nextInt(GRIDSIZE), rand.nextInt(GRIDSIZE));
+            randomXY = new Coordinates(rand.nextInt(GRIDSIZE), rand.nextInt(GRIDSIZE));
+            randomPos = new Action(randomXY, PositionState.INWATER);
         }
         // TODO (fixed) declare hard-coded values as constant (0)
-        while (!(getCellStateFromPlayerShotGrid(playerNumber, randomPos) == PositionState.UNSHOT));
+        while (!(this.players[playerNumber].getActions().indexOf(randomPos) == -1));
 
-        return randomPos;
+        return randomPos.getCoordinates();
     }
 
     /**
@@ -181,7 +191,7 @@ public class NavalBattle
             otherPlayerNumber=PLAYER1;
         
         // TODO (fixed) rename variable (more explicit)
-        PositionState actionState = PositionState.UNSHOT;
+        PositionState actionState;
         if (isBoatOnPlayerBoatGridAt(otherPlayerNumber, coordinates))
         {
             // TODO (fixed) declare hard-coded values as constants
@@ -192,25 +202,30 @@ public class NavalBattle
             // TODO (fixed) declare hard-coded values as constants
             actionState = PositionState.INWATER;
 
-        // TODO (fixed) declare hard-coded values as constants 
-        this.players[playerNumber].getActions()[coordinates.getY()][coordinates.getX()].setState(actionState);
+        this.players[playerNumber].getActions().add(new Action(coordinates, actionState));
     }
 
     /**
-     * simple method to easily get the state of a case
+     * Simple method to easily get the state of a case
      * 
      * @param playerNumber
      *            : The number of the player
      * @param coords
      *            : coordinates of the position to test
-     * @return integer : 0 this position hasn't been played yet 1 the position
-     *         has been played but water 2 the position has been played and
-     *         touched a boat
+     * @return PositionState : the state of the case
+     * @throws UndefinedCaseStateException : throw this exception if you try to access 
+     *                  to a case which is not in the list of the player's actions
      */
-    private PositionState getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords)
+    private PositionState getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws UndefinedCaseStateException
     {
         // TODO (fixed) this is not error-proof
-        return this.players[playerNumber].getActions()[coords.getY()][coords.getX()].getState();
+        Action actionCoords = new Action(coords, PositionState.INWATER);
+        int index = this.players[playerNumber].getActions().indexOf(actionCoords);
+        
+        if (!(index == -1))
+            return this.players[playerNumber].getActions().get(index).getState();
+        else 
+            throw new UndefinedCaseStateException();
     }
 
     /**

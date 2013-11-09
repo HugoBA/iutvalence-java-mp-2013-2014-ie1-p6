@@ -69,7 +69,7 @@ public class Coordinates
     // TODO (fixed) write comment (say how coordinates are considered to be the
     // same)
     /**
-     * two coordinates are equals if they share the same values for both x and y
+     * Two coordinates are equals if they share the same values for both x and y
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object o)

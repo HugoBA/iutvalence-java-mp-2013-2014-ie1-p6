@@ -23,12 +23,13 @@ public class Action
      * 
      * @param position
      *            : X and Y positions of the played Case
+     * @param inState : the state to set
      */
     // TODO (fixed) replace the two parameters by a single Coordinates
-    public Action(Coordinates position)
+    public Action(Coordinates position, PositionState inState)
     {
         this.coordinates = position;
-        this.state = PositionState.UNSHOT;
+        this.state = inState;
     }
 
     /**
@@ -60,6 +61,26 @@ public class Action
     public void setState(PositionState State)
     {
         this.state = State;
+    }
+    
+    //TODO (fixed) Redefine the hashCode
+    public int hashCode()
+    {
+        return this.coordinates.getX() * 10 + this.coordinates.getY();
+    }
+    
+    /**
+     * Two Actions are considerate as equals if their Coordinates are the same
+     */
+    //TODO (fixed) Redefine the equals method
+    public boolean equals(Object o)
+    {
+        if (o == this)
+            return true;
+        if (o == null)
+            return false;
+        Action tmp = (Action) o;
+        return this.coordinates.equals(tmp.coordinates);
     }
 
 }

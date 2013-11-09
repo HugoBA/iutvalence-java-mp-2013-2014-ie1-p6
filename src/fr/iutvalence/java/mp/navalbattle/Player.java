@@ -1,5 +1,8 @@
 package fr.iutvalence.java.mp.navalbattle;
 
+import java.util.List;
+import java.util.LinkedList;
+
 /**
  * Represent a player of the Naval Battle
  * 
@@ -18,7 +21,7 @@ public class Player
     /**
      * Player's actions
      */
-    private Action[][] actions;
+    private List<Action> actions;
 
     /**
      * Constructor for a player
@@ -31,20 +34,7 @@ public class Player
     {
         // TODO (fixed) declare hard-coded values as constants
         // TODO (fixed) avoid using a temp variable
-        this.actions =  new Action[NavalBattle.GRIDSIZE][NavalBattle.GRIDSIZE];
-        Coordinates position;
-
-        // TODO (fixed) rename local variables (more explicit)
-        // TODO (fixed) declare local variable inside loop initializer
-        for (int y = 0; y < NavalBattle.GRIDSIZE; y++)
-        {
-            for (int x = 0; x < NavalBattle.GRIDSIZE; x++)
-            {
-                position = new Coordinates(x,y);
-                this.actions[y][x] = new Action(position);
-            }
-        }
-
+        this.actions =  new LinkedList<Action>();
         this.boats = playerBoats;
     }
 
@@ -62,7 +52,7 @@ public class Player
      * returns the Action table of the player
      * @return the action table
      */
-    public Action[][] getActions()
+    public List<Action> getActions()
     {
         return this.actions;
     }

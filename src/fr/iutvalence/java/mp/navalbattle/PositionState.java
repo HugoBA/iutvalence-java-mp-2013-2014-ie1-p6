@@ -7,15 +7,34 @@ package fr.iutvalence.java.mp.navalbattle;
 public enum PositionState
 {
     /**
-     * The player didn't shoot the position yet
+     * The player shot on a boat and sunk this one
      */
-    UNSHOT, 
+    SINK, 
     /**
-     * The player shot on a boat
+     * The player shot on a boat, but the latter hasn't been sunk yet
      */
     ONBOAT, 
     /**
      * The player shot in water
      */
     INWATER;
+
+    @Override
+    public String toString()
+    {
+        switch (this)
+        {
+        case SINK:
+            
+            return "S";
+        case ONBOAT:
+            
+            return "T";
+        case INWATER:
+        default:
+            return " ";
+         }
+    }
+    
+    
 };
