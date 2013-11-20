@@ -1,5 +1,5 @@
 package fr.iutvalence.java.mp.navalbattle;
-
+import java.util.Scanner; 
 import java.util.Random;
 
 /**
@@ -21,6 +21,11 @@ public class NavalBattle
      * Max size for the game grid (X and Y)
      */
     public final static int GRIDSIZE = 10;
+    
+    /**
+     * table containing the names of the 5 boats of the game
+     */
+    public final static String[] BOATNAMES = {"aircraft carrier","battleship","submarine","destroyer","patrol boat"};
 
     /**
      * The players
@@ -33,7 +38,7 @@ public class NavalBattle
      * of what they have done (Operations)
      * Once created, each player owns a Boats table (initialized as untouched) 
      * and an Action table (initialized as unshot)
-     * The method play automatically plays a random action for each player
+     * The method play lets the 2 players one after the other
      * It goes on and on until all the boats of a player are sunk
      * 
      * @param player1Boats
@@ -50,18 +55,24 @@ public class NavalBattle
     }
 
     /**
-     * launches the game plays randomly the cases of the naval battle game,
-     * until a player wins
+     * launches the game 
+     * lets the 2 players play their turn alternatively
+     * player2 (=bot) plays randomly and automatically the cases of the naval battle game,
+     * player1 plays his own case and the updated game grid is displayed
+     * the loop continues until a player wins
      */
     public void play()
     {
-
         int currentPlayer = PLAYER1;
         // TODO (fixed) consider that the loop allows only the current player to
         // play
         // here, it is a player1+player2 loop
+        
+        System.out.println("\nLet's play !\n");
+        displayPlayerGrid(PLAYER1);
         while (!(this.players[currentPlayer].didPlayerLoose()))
         {
+            /*
             displayPlayerGrid(currentPlayer);
             processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
 
@@ -73,13 +84,25 @@ public class NavalBattle
             {
                 Thread.currentThread().interrupt();
             }
+            */
             if (currentPlayer == PLAYER1)
+            {
+                processPlayerShot(currentPlayer, getUserFreeCellCoordinatesToShoot(currentPlayer));
+                displayPlayerGrid(currentPlayer);
                 currentPlayer = PLAYER2;
+            }
             else
+            {
+                processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
                 currentPlayer = PLAYER1;
+            }
         }
+        
+        
+        System.out.println("\nFinal lay-out : \n");
         displayPlayerGrid(PLAYER1);
         displayPlayerGrid(PLAYER2);
+        
         if (this.players[PLAYER1].didPlayerLoose())
             System.out.println("Player 2 won!");
         else
@@ -147,6 +170,43 @@ public class NavalBattle
         System.out.println("");
     }
 
+    
+    /**
+     * Lets the player choose the coordinates to play
+     * 
+     * @param playerNumber
+     *            : The number of the player
+     * @return : A non-shot case, chosen by the player
+     */
+    public Coordinates getUserFreeCellCoordinatesToShoot(int playerNumber)
+    {
+        Scanner coordEntry = new Scanner(System.in);
+        Coordinates userXY;
+        String xTemp;
+        int x, y;
+        Action actionPos;
+        do
+        {
+            System.out.println("Coordinates to shoot :");
+            System.out.print("X:");
+            xTemp = coordEntry.next();
+            if(xTemp.charAt(0) - 96 <0)
+                x = (int) xTemp.charAt(0) - 64;
+            else
+                x = (int) xTemp.charAt(0) - 96;
+            System.out.print("Y:");
+            y = Integer.parseInt(coordEntry.next());
+            System.out.println("You just entered : (" + x + ";" + y + ")\n");
+            userXY = new Coordinates(x-1, y-1);
+            actionPos = new Action(userXY, PositionState.INWATER);
+        }
+        while (!(this.players[playerNumber].getActions().indexOf(actionPos) == -1));
+
+        return actionPos.getCoordinates();
+    }
+    
+    
+    
     /**
      * Give a random case that the player have not played yet
      * 
@@ -197,6 +257,7 @@ public class NavalBattle
             // TODO (fixed) declare hard-coded values as constants
             actionState = PositionState.ONBOAT;
             setBoatHitOnPlayerBoatGridAt(otherPlayerNumber, coordinates);
+            didBoatSink(otherPlayerNumber);
         }
         else
             // TODO (fixed) declare hard-coded values as constants
@@ -204,6 +265,7 @@ public class NavalBattle
 
         this.players[playerNumber].getActions().add(new Action(coordinates, actionState));
     }
+
 
     /**
      * Simple method to easily get the state of a case
@@ -299,6 +361,22 @@ public class NavalBattle
                 if(currentPosition.getX() == coordinates.getX() && currentPosition.getY() == coordinates.getY())
                     currentPosition.setBoatCaseTouched();
             }
+        }
+    }
+    
+
+    /**
+     * method to know if the last shot sunk the entire boat
+     * if so, a message is displayed to inform the player
+     * @param otherPlayerNumber : the number of the adversary
+     */
+    private void didBoatSink(int otherPlayerNumber)
+    {
+        for (int i = 0; i < this.players[otherPlayerNumber].getBoats().length; i++)
+        {
+            if(this.players[otherPlayerNumber].getBoats()[i].didThisBoatJustSank())
+                //TODO the following message shouldn't appear when your adversary kills your boats !
+                System.out.println("\nYou just sunk the " + BOATNAMES[i] + " !\n");
         }
     }
 }

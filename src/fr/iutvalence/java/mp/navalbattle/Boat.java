@@ -11,9 +11,14 @@ import java.util.Random;
 public class Boat
 {
     /**
-     * list of positions occupied by the boat
+     * List of positions occupied by the boat
      */
     private BoatCellCoordinates[] positions;
+    
+    /**
+     * Boolean to know if the boat sank or not
+     */
+    private boolean sunk;
 
     /**
      * Create a boat by giving its coordinates
@@ -24,6 +29,7 @@ public class Boat
     public Boat(BoatCellCoordinates[] positions)
     {
         this.positions = positions;
+        this.sunk = false;
     }
 
     /**
@@ -90,6 +96,48 @@ public class Boat
         }
     }
 
+    
+    /**
+     * Creates a boat from the extremity given in parameters, to a given direction, for a specified length 
+     * @param extremity :  the coordinates of one extremity of the boat
+     * @param direction : integer : the direction the boat takes from its first extremity
+     *                           0: to the left
+     *                           1: to the right
+     *                           2: to the top
+     *                           3: to the bottom
+     * 
+     * @param length : length of the boat
+     */
+    public Boat(Coordinates extremity, int direction, int length)
+    {
+        //TODO make coordinates verifications
+        int x = extremity.getX();
+        int y = extremity.getY();
+        
+        this.positions = new BoatCellCoordinates[length];
+
+        int i;
+        for (i = 0; i < length; i++)
+        {
+            switch (direction)
+            {
+            case 0:
+                this.positions[i] = new BoatCellCoordinates(x - i, y);
+                break;
+            case 1:
+                this.positions[i] = new BoatCellCoordinates(x + i, y);
+                break;
+            case 2:
+                this.positions[i] = new BoatCellCoordinates(x, y - i);
+                break;
+            case 3:
+                this.positions[i] = new BoatCellCoordinates(x, y + i);
+                break;
+            }
+        }
+    }
+    
+    
     /**
      * Method that simply returns the position of the boat
      * 
@@ -113,5 +161,31 @@ public class Boat
         for (int i = 0; i < (this.positions.length); i++)
             if (this.positions[i].equals(position)) return true;
         return false;
+    }
+
+    /**
+     * method to know if the boat is sunk or not
+     * @return boolean : true if the boat is sunk
+     */
+    public boolean isSunk()
+    {
+        return this.sunk;
+    }
+    
+    /**
+     * Method to know if the boat has been sunk after the action
+     * if yes, sets the boat as sunk
+     * @return boolean : true if the boat has just been sunk
+     *                   false if the boat isn't or was already sunk
+     */
+    public boolean didThisBoatJustSank()
+    {
+        for (int i = 0; i < this.positions.length; i++)
+        {
+            if(!this.positions[i].isBoatCaseTouched() || this.sunk == true)
+                return false;
+        }
+        this.sunk = true;
+        return true;
     }
 }

@@ -7,5 +7,10 @@ package fr.iutvalence.java.mp.navalbattle;
  */
 public class UndefinedCaseStateException extends Exception
 {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2068313964225905284L;
     
 }

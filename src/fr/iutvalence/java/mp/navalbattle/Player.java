@@ -67,10 +67,7 @@ public class Player
         boolean lost = true;
         for (int i = 0; i < this.boats.length; i++)
         {
-            for (int j = 0; j < this.boats[i].getPositions().length; j++)
-            {
-                lost = lost && this.boats[i].getPositions()[j].isBoatCaseTouched();
-            }
+            lost = lost && this.boats[i].isSunk();
         }
         return lost;
     }

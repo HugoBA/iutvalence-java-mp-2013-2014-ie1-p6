@@ -1,4 +1,5 @@
 package fr.iutvalence.java.mp.navalbattle;
+import java.util.Scanner; 
 
 /**
  * main class for the naval battle game
@@ -10,20 +11,72 @@ public class Main
 {
     /**
      * Main method, sets the settings of the players and launches the games
-     * 
+     * Asks the user if he wants to create his boats himself, or if he lets the computer handle it for him
      * @param args
      *            : none
      */
     public static void main(String[] args)
     {
         Boat[] boatsP1, boatsP2;
-        boatsP1 = createRandomBoats();
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Create random boats ? [yes]");
+        if(scanner.next().equals("yes"))
+            boatsP1 = createRandomBoats();
+        else
+            boatsP1 = createUserBoats();
+        
         boatsP2 = createRandomBoats();
         NavalBattle game = new NavalBattle(boatsP1, boatsP2);
         game.play();
         
     }
 
+
+    
+    /**
+     * method to make a table of boats, created manually by the user
+     * 
+     * @return the table of boats just created
+     */
+    public static Boat[] createUserBoats()
+    {
+        int[] BoatLengths = { 5, 4, 3, 3, 2 };
+        Scanner coordEntry = new Scanner(System.in);
+        int x, y, direction;
+        String xTemp;
+        Coordinates extremityPosition;
+        Boat[] newBoat = new Boat[5];
+
+        for(int i=0; i < BoatLengths.length; i++)
+        {
+            System.out.print("");
+            System.out.println("First extremity of the "+NavalBattle.BOATNAMES[i]+" (length "+BoatLengths[i]+") :");
+            System.out.print("X:");
+            xTemp = coordEntry.next();
+            
+            if(xTemp.charAt(0) - 96 <0)
+                x = (int) xTemp.charAt(0) - 64;
+            else
+                x = (int) xTemp.charAt(0) - 96;
+            System.out.print("Y:");
+            y = Integer.parseInt(coordEntry.next());
+            System.out.println("You just entered : (" + x + ";" + y + ")");
+            
+            System.out.println("Now choose a direction:");
+            System.out.println("0: to the left");
+            System.out.println("1: to the right");
+            System.out.println("2: to the top");
+            System.out.println("3: to the bottom");
+            direction = Integer.parseInt(coordEntry.next());
+            
+            extremityPosition = new Coordinates(x-1, y-1);
+            newBoat[i] = new Boat(extremityPosition, direction, BoatLengths[i]);
+        }
+        return newBoat;
+    }
+    
+    
     /**
      * method to make a table of random boats
      * 
