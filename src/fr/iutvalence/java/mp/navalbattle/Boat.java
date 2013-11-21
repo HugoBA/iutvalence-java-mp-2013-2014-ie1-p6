@@ -43,13 +43,12 @@ public class Boat
     public Boat(int length)
     {
         Random rand = new Random();
-        // TODO (fixed) rename fields i and d
+        // TODO (fix) declare hard-coded values as constants
         int direction = rand.nextInt(4);
-        // TODO (fixed) declare hard-coded values as constants
+        // TODO (fix) declare variable the closest possible from where they are used for the first time
         int x,y;
         boolean able = false;
         
-        // TODO (fixed) avoid using a temp variable
         this.positions = new BoatCellCoordinates[length];
         
         do
@@ -58,6 +57,7 @@ public class Boat
             y =  rand.nextInt(NavalBattle.GRIDSIZE);
             switch (direction)
             {
+            // TODO (fix) declare hard-coded values as constants
             case 0:
                 able = ((x - length) >= 0);
                 break;
@@ -121,6 +121,7 @@ public class Boat
         {
             switch (direction)
             {
+            // TODO (fix) declare hard-coded values as constants
             case 0:
                 this.positions[i] = new BoatCellCoordinates(x - i, y);
                 break;

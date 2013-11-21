@@ -32,7 +32,6 @@ public class NavalBattle
      */
     private Player[] players;
 
-    // TODO (fixed) detail comment (how is the game once created?)
     /**
      * Constructor which initializes the boats of the two players and the grid
      * of what they have done (Operations)
@@ -48,7 +47,6 @@ public class NavalBattle
      */
     public NavalBattle(Boat[] player1Boats, Boat[] player2Boats)
     {
-        // TODO (fixed) avoid using a temp variable
         this.players = new Player[2];
         this.players[0] = new Player(player1Boats);
         this.players[1] = new Player(player2Boats);
@@ -64,9 +62,6 @@ public class NavalBattle
     public void play()
     {
         int currentPlayer = PLAYER1;
-        // TODO (fixed) consider that the loop allows only the current player to
-        // play
-        // here, it is a player1+player2 loop
         
         System.out.println("\nLet's play !\n");
         displayPlayerGrid(PLAYER1);
@@ -216,7 +211,7 @@ public class NavalBattle
      */
     public Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
     {
-        // TODO (fixed) in Java, you can declare local variable where you
+        // TODO (fix) in Java, you can declare local variable where you
         // use it for the first time
         Random rand = new Random();
         Coordinates randomXY;
@@ -226,7 +221,6 @@ public class NavalBattle
             randomXY = new Coordinates(rand.nextInt(GRIDSIZE), rand.nextInt(GRIDSIZE));
             randomPos = new Action(randomXY, PositionState.INWATER);
         }
-        // TODO (fixed) declare hard-coded values as constant (0)
         while (!(this.players[playerNumber].getActions().indexOf(randomPos) == -1));
 
         return randomPos.getCoordinates();
@@ -250,17 +244,14 @@ public class NavalBattle
         else
             otherPlayerNumber=PLAYER1;
         
-        // TODO (fixed) rename variable (more explicit)
         PositionState actionState;
         if (isBoatOnPlayerBoatGridAt(otherPlayerNumber, coordinates))
         {
-            // TODO (fixed) declare hard-coded values as constants
             actionState = PositionState.ONBOAT;
             setBoatHitOnPlayerBoatGridAt(otherPlayerNumber, coordinates);
             didBoatSink(otherPlayerNumber);
         }
         else
-            // TODO (fixed) declare hard-coded values as constants
             actionState = PositionState.INWATER;
 
         this.players[playerNumber].getActions().add(new Action(coordinates, actionState));
@@ -280,7 +271,6 @@ public class NavalBattle
      */
     private PositionState getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws UndefinedCaseStateException
     {
-        // TODO (fixed) this is not error-proof
         Action actionCoords = new Action(coords, PositionState.INWATER);
         int index = this.players[playerNumber].getActions().indexOf(actionCoords);
         
@@ -301,7 +291,6 @@ public class NavalBattle
      */
     private boolean isBoatOnPlayerBoatGridAt(int playerNumber, Coordinates position)
     {
-        // TODO (fixed) you can make it more readable
         for (int i = 0; i < this.players[playerNumber].getBoats().length; i++)
         {
             if(this.players[playerNumber].getBoats()[i].isOnPosition(position))

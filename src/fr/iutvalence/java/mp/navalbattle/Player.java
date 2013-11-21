@@ -16,8 +16,6 @@ public class Player
      */
     private Boat[] boats;
 
-    // TODO (fixed) you should declare as a 2D array of enumerated values
-    // TODO (fixed) this field should be declared as private
     /**
      * Player's actions
      */
@@ -32,8 +30,6 @@ public class Player
      */
     public Player(Boat[] playerBoats)
     {
-        // TODO (fixed) declare hard-coded values as constants
-        // TODO (fixed) avoid using a temp variable
         this.actions =  new LinkedList<Action>();
         this.boats = playerBoats;
     }

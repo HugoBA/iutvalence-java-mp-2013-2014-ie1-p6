@@ -66,8 +66,6 @@ public class Coordinates
         return (this.x * 10 + this.y);
     }
 
-    // TODO (fixed) write comment (say how coordinates are considered to be the
-    // same)
     /**
      * Two coordinates are equals if they share the same values for both x and y
      * @see java.lang.Object#equals(java.lang.Object)
