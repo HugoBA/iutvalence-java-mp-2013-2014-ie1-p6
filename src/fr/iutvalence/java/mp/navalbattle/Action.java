@@ -62,10 +62,10 @@ public class Action
         this.state = State;
     }
     
-    //TODO (fix) use hashCode defined in coordinates
+    //TODO (fixed) use hashCode defined in coordinates
     public int hashCode()
     {
-        return this.coordinates.getX() * 10 + this.coordinates.getY();
+        return this.coordinates.hashCode();
     }
     
     /**

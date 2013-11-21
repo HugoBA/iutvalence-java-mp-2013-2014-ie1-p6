@@ -1,4 +1,6 @@
 package fr.iutvalence.java.mp.navalbattle;
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner; 
 
 /**
@@ -20,8 +22,8 @@ public class Main
         Boat[] boatsP1, boatsP2;
         Scanner scanner = new Scanner(System.in);
         
-        System.out.println("Create random boats ? [yes]");
-        if(scanner.next().equals("yes"))
+        System.out.println("Do you want to create your own boats ? [yes]");
+        if(!scanner.next().equals("yes"))
             boatsP1 = createRandomBoats();
         else
             boatsP1 = createUserBoats();
@@ -29,6 +31,7 @@ public class Main
         boatsP2 = createRandomBoats();
         NavalBattle game = new NavalBattle(boatsP1, boatsP2);
         game.play();
+        scanner.close();
         
     }
 
@@ -43,36 +46,53 @@ public class Main
     {
         int[] BoatLengths = { 5, 4, 3, 3, 2 };
         Scanner coordEntry = new Scanner(System.in);
-        int x, y, direction;
-        String xTemp;
+        int x, y;
+        String xTemp, yTemp, directionTemp;
         Coordinates extremityPosition;
         Boat[] newBoat = new Boat[5];
 
         for(int i=0; i < BoatLengths.length; i++)
         {
-            System.out.print("");
-            System.out.println("First extremity of the "+NavalBattle.BOATNAMES[i]+" (length "+BoatLengths[i]+") :");
-            System.out.print("X:");
-            xTemp = coordEntry.next();
+            System.out.println("\nFirst extremity of the "+NavalBattle.BOATNAMES[i]+" (length "+BoatLengths[i]+") :");
+            do
+            {
+                System.out.print("X:");
+                xTemp = coordEntry.next();
             
-            if(xTemp.charAt(0) - 96 <0)
-                x = (int) xTemp.charAt(0) - 64;
-            else
-                x = (int) xTemp.charAt(0) - 96;
-            System.out.print("Y:");
-            y = Integer.parseInt(coordEntry.next());
+                if(xTemp.charAt(0) - 96 <0)
+                    x = (int) xTemp.charAt(0) - 64;
+                else
+                    x = (int) xTemp.charAt(0) - 96;
+                if (x < 1 || x > NavalBattle.GRIDSIZE)
+                    System.out.println("Invalid X. Try again !");
+            }while (x < 1 || x > NavalBattle.GRIDSIZE);
+            
+            do
+            {
+                System.out.print("Y:");
+                yTemp = coordEntry.next();
+                y = (int) yTemp.charAt(0)-48;
+                if (y < 1 || y > NavalBattle.GRIDSIZE)
+                    System.out.println("Invalid Y. Try again !");
+            }
+            while (y < 1 || y > NavalBattle.GRIDSIZE);
+            
             System.out.println("You just entered : (" + x + ";" + y + ")");
             
             System.out.println("Now choose a direction:");
-            System.out.println("0: to the left");
-            System.out.println("1: to the right");
-            System.out.println("2: to the top");
-            System.out.println("3: to the bottom");
-            direction = Integer.parseInt(coordEntry.next());
+            System.out.println(Boat.LEFT+": to the left");
+            System.out.println(Boat.RIGHT+": to the right");
+            System.out.println(Boat.UP+": to the top");
+            System.out.println(Boat.DOWN+": to the bottom");
+
+            //TODO (fix) not error-proof
+            int direction = coordEntry.nextInt();
+                
             
             extremityPosition = new Coordinates(x-1, y-1);
             newBoat[i] = new Boat(extremityPosition, direction, BoatLengths[i]);
         }
+        coordEntry.close();
         return newBoat;
     }
     

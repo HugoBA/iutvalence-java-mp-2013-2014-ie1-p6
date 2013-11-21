@@ -197,6 +197,7 @@ public class NavalBattle
         }
         while (!(this.players[playerNumber].getActions().indexOf(actionPos) == -1));
 
+        coordEntry.close();
         return actionPos.getCoordinates();
     }
     
@@ -211,15 +212,15 @@ public class NavalBattle
      */
     public Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
     {
-        // TODO (fix) in Java, you can declare local variable where you
+        // TODO (fixed) in Java, you can declare local variable where you
         // use it for the first time
         Random rand = new Random();
-        Coordinates randomXY;
         Action randomPos;
         do
         {
-            randomXY = new Coordinates(rand.nextInt(GRIDSIZE), rand.nextInt(GRIDSIZE));
-            randomPos = new Action(randomXY, PositionState.INWATER);
+            randomPos = new Action(
+                    new Coordinates(rand.nextInt(GRIDSIZE), 
+                            rand.nextInt(GRIDSIZE)), PositionState.INWATER);
         }
         while (!(this.players[playerNumber].getActions().indexOf(randomPos) == -1));
 
