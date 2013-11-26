@@ -5,6 +5,7 @@ package fr.iutvalence.java.mp.navalbattle;
  * @author Quentin
  *
  */
+// TODO (fix) rename class
 public class UndefinedCaseStateException extends Exception
 {
 

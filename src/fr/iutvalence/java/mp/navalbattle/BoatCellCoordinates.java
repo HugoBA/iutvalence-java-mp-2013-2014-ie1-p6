@@ -1,5 +1,6 @@
 package fr.iutvalence.java.mp.navalbattle;
 
+// TODO (fix) fix comment
 /**
  * A BoatCase is a Coordinates plus the state of the case
  * This class is only made to be used as a case of a Boat
@@ -23,9 +24,9 @@ public class BoatCellCoordinates extends Coordinates
     }
     
     /**
-     * Create a Boat case on the given position, as not touched
-     * @param x : X position of the case
-     * @param y : Y position of the case
+     * Create a Boat cell on the given position, as not touched
+     * @param x : X position of the cell
+     * @param y : Y position of the cell
      */
     public BoatCellCoordinates (int x, int y)
     {
@@ -34,21 +35,19 @@ public class BoatCellCoordinates extends Coordinates
     }
 
     /**
-     * Gives the state of the case
-     * @return : Case state
+     * Gives the state of the cell
+     * @return : cell state
      */
-    public boolean isBoatCaseTouched()
+    public boolean isBoatCellTouched()
     {
         return this.isTouched;
     }
 
     /**
-     * Sets the case as touched
+     * Sets the cell as touched
      */
-    public void setBoatCaseTouched()
+    public void setBoatCellTouched()
     {
         this.isTouched = true;
-    }
-    
-    
+    }   
 }

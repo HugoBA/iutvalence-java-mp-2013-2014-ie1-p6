@@ -16,6 +16,7 @@ public class Player
      */
     private Boat[] boats;
 
+    // TODO (fix) detail comment
     /**
      * Player's actions
      */
@@ -60,6 +61,7 @@ public class Player
      */
     public boolean didPlayerLoose()
     {
+        // TODO (fix) simplify and optimize
         boolean lost = true;
         for (int i = 0; i < this.boats.length; i++)
         {

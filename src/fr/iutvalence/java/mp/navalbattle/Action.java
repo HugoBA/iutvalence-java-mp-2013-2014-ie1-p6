@@ -62,7 +62,9 @@ public class Action
         this.state = State;
     }
     
-    //TODO (fixed) use hashCode defined in coordinates
+    /**
+     * @see java.lang.Object#hashCode()
+     */
     public int hashCode()
     {
         return this.coordinates.hashCode();

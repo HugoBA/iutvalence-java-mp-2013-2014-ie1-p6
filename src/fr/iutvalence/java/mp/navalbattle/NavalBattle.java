@@ -10,22 +10,22 @@ public class NavalBattle
     /**
      * Value for Player1
      */
-    public final static int PLAYER1 = 0;
+    public final static int PLAYER_1 = 0;
 
     /**
      * Value for Player2
      */
-    public final static int PLAYER2 = 1;
+    public final static int PLAYER_2 = 1;
     
     /**
      * Max size for the game grid (X and Y)
      */
-    public final static int GRIDSIZE = 10;
+    public final static int GRID_SIZE = 10;
     
     /**
      * table containing the names of the 5 boats of the game
      */
-    public final static String[] BOATNAMES = {"aircraft carrier","battleship","submarine","destroyer","patrol boat"};
+    public final static String[] BOAT_NAMES = {"aircraft carrier","battleship","submarine","destroyer","patrol boat"};
 
     /**
      * The players
@@ -61,10 +61,10 @@ public class NavalBattle
      */
     public void play()
     {
-        int currentPlayer = PLAYER1;
+        int currentPlayer = PLAYER_1;
         
         System.out.println("\nLet's play !\n");
-        displayPlayerGrid(PLAYER1);
+        displayPlayerGrid(PLAYER_1);
         while (!(this.players[currentPlayer].didPlayerLoose()))
         {
             /*
@@ -80,25 +80,26 @@ public class NavalBattle
                 Thread.currentThread().interrupt();
             }
             */
-            if (currentPlayer == PLAYER1)
+            // TODO (fix) do not make something different for woth players
+            if (currentPlayer == PLAYER_1)
             {
                 processPlayerShot(currentPlayer, getUserFreeCellCoordinatesToShoot(currentPlayer));
                 displayPlayerGrid(currentPlayer);
-                currentPlayer = PLAYER2;
+                currentPlayer = PLAYER_2;
             }
             else
             {
                 processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
-                currentPlayer = PLAYER1;
+                currentPlayer = PLAYER_1;
             }
         }
         
         
         System.out.println("\nFinal lay-out : \n");
-        displayPlayerGrid(PLAYER1);
-        displayPlayerGrid(PLAYER2);
+        displayPlayerGrid(PLAYER_1);
+        displayPlayerGrid(PLAYER_2);
         
-        if (this.players[PLAYER1].didPlayerLoose())
+        if (this.players[PLAYER_1].didPlayerLoose())
             System.out.println("Player 2 won!");
         else
             System.out.println("Player 1 won!");
@@ -117,13 +118,13 @@ public class NavalBattle
         Coordinates position;
 
         System.out.println("   A B C D E F G H I J        A B C D E F G H I J");
-        for (j = 0; j < GRIDSIZE; j++)
+        for (j = 0; j < GRID_SIZE; j++)
         {
-            if (j + 1 < GRIDSIZE)
+            if (j + 1 < GRID_SIZE)
                 System.out.print(" " + (j + 1) + " ");
             else
                 System.out.print((j + 1) + " ");
-            for (i = 0; i < GRIDSIZE; i++)
+            for (i = 0; i < GRID_SIZE; i++)
             {
                 position = new Coordinates(i, j);
                 if (isBoatOnPlayerBoatGridAt(playerNumber, position))
@@ -138,11 +139,11 @@ public class NavalBattle
             }
 
             System.out.print("    ");
-            if (j + 1 < GRIDSIZE)
+            if (j + 1 < GRID_SIZE)
                 System.out.print(" " + (j + 1) + " ");
             else
                 System.out.print((j + 1) + " ");
-            for (i = 0; i < GRIDSIZE; i++)
+            for (i = 0; i < GRID_SIZE; i++)
             {
                 position = new Coordinates(i, j);
                 try
@@ -212,15 +213,13 @@ public class NavalBattle
      */
     public Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
     {
-        // TODO (fixed) in Java, you can declare local variable where you
-        // use it for the first time
         Random rand = new Random();
         Action randomPos;
         do
         {
             randomPos = new Action(
-                    new Coordinates(rand.nextInt(GRIDSIZE), 
-                            rand.nextInt(GRIDSIZE)), PositionState.INWATER);
+                    new Coordinates(rand.nextInt(GRID_SIZE), 
+                            rand.nextInt(GRID_SIZE)), PositionState.INWATER);
         }
         while (!(this.players[playerNumber].getActions().indexOf(randomPos) == -1));
 
@@ -240,10 +239,10 @@ public class NavalBattle
     private void processPlayerShot(int playerNumber, Coordinates coordinates)
     {
         int otherPlayerNumber;
-        if (playerNumber == PLAYER1)
-            otherPlayerNumber=PLAYER2;
+        if (playerNumber == PLAYER_1)
+            otherPlayerNumber=PLAYER_2;
         else
-            otherPlayerNumber=PLAYER1;
+            otherPlayerNumber=PLAYER_1;
         
         PositionState actionState;
         if (isBoatOnPlayerBoatGridAt(otherPlayerNumber, coordinates))
@@ -323,7 +322,7 @@ public class NavalBattle
                 
                 if(currentPosition.getX() == positionCoords.getX() 
                         && currentPosition.getY() == positionCoords.getY()
-                        && currentPosition.isBoatCaseTouched() == true)
+                        && currentPosition.isBoatCellTouched() == true)
                     return true;
             }
         }
@@ -349,7 +348,7 @@ public class NavalBattle
                 currentPosition = this.players[playerNumber].getBoats()[i].getPositions()[j];
                 
                 if(currentPosition.getX() == coordinates.getX() && currentPosition.getY() == coordinates.getY())
-                    currentPosition.setBoatCaseTouched();
+                    currentPosition.setBoatCellTouched();
             }
         }
     }
@@ -366,7 +365,7 @@ public class NavalBattle
         {
             if(this.players[otherPlayerNumber].getBoats()[i].didThisBoatJustSank())
                 //TODO the following message shouldn't appear when your adversary kills your boats !
-                System.out.println("\nYou just sunk the " + BOATNAMES[i] + " !\n");
+                System.out.println("\nYou just sunk the " + BOAT_NAMES[i] + " !\n");
         }
     }
 }

@@ -13,23 +13,29 @@ public class Boat
     /**
      * The number of positions a boat can take
      */
+    // TODO (fix) the purpose of this constant is not really clear (explain)
     public final static int NB_POSITIONS = 4;
+    
     /**
      * Left direction value
      */
     public final static int LEFT = 0;
+    
     /**
      * Right direction value
      */
     public final static int RIGHT = 1;
+    
     /**
      * Up direction value
      */
     public final static int UP = 2;
+    
     /**
      * Down direction value
      */
     public final static int DOWN = 3;
+    
     /**
      * List of positions occupied by the boat
      */
@@ -63,9 +69,8 @@ public class Boat
     public Boat(int length)
     {
         Random rand = new Random();
-        // TODO (fixed) declare hard-coded values as constants
+        
         int direction = rand.nextInt(NB_POSITIONS);
-        // TODO (fixed) declare variable the closest possible from where they are used for the first time
         boolean able = false;
         
         this.positions = new BoatCellCoordinates[length];
@@ -73,22 +78,21 @@ public class Boat
         int x,y;
         do
         {
-            x =  rand.nextInt(NavalBattle.GRIDSIZE);
-            y =  rand.nextInt(NavalBattle.GRIDSIZE);
+            x =  rand.nextInt(NavalBattle.GRID_SIZE);
+            y =  rand.nextInt(NavalBattle.GRID_SIZE);
             switch (direction)
             {
-            // TODO (fixed) declare hard-coded values as constants
             case LEFT:
                 able = ((x - length) >= 0);
                 break;
             case RIGHT:
-                able = ((x + length) < NavalBattle.GRIDSIZE);
+                able = ((x + length) < NavalBattle.GRID_SIZE);
                 break;
             case UP:
                 able = ((y - length) >= 0);
                 break;
             case DOWN:
-                able = ((y + length) < NavalBattle.GRIDSIZE);
+                able = ((y + length) < NavalBattle.GRID_SIZE);
                 break;
             }
         }
@@ -141,7 +145,6 @@ public class Boat
         {
             switch (direction)
             {
-            // TODO (fixed) declare hard-coded values as constants
             case LEFT:
                 this.positions[i] = new BoatCellCoordinates(x - i, y);
                 break;
@@ -203,7 +206,7 @@ public class Boat
     {
         for (int i = 0; i < this.positions.length; i++)
         {
-            if(!this.positions[i].isBoatCaseTouched() || this.sunk == true)
+            if(!this.positions[i].isBoatCellTouched() || this.sunk == true)
                 return false;
         }
         this.sunk = true;

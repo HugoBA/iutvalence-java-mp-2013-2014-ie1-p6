@@ -9,12 +9,12 @@ package fr.iutvalence.java.mp.navalbattle;
 public class Coordinates
 {
     /**
-     * Position x of the case
+     * X-axis coordinate
      */
     private int x;
 
     /**
-     * Position y of the case
+     * Y-axis coordinate
      */
     private int y;
 
@@ -30,15 +30,15 @@ public class Coordinates
     /**
      * Constructor with position values as parameters
      * 
-     * @param posx
+     * @param posX
      *            : x value to set
-     * @param posy
+     * @param posY
      *            : y value
      */
-    public Coordinates(int posx, int posy)
+    public Coordinates(int posX, int posY)
     {
-        this.x = posx;
-        this.y = posy;
+        this.x = posX;
+        this.y = posY;
     }
 
     /**
@@ -61,6 +61,9 @@ public class Coordinates
         return this.y;
     }
 
+    /**
+     * @see java.lang.Object#hashCode()
+     */
     public int hashCode()
     {
         return (this.x * 10 + this.y);

@@ -9,7 +9,7 @@ public enum PositionState
     /**
      * The player shot on a boat and sunk this one
      */
-    SINK, 
+    SUNK, 
     /**
      * The player shot on a boat, but the latter hasn't been sunk yet
      */
@@ -24,7 +24,7 @@ public enum PositionState
     {
         switch (this)
         {
-        case SINK:
+        case SUNK:
             
             return "S";
         case ONBOAT:

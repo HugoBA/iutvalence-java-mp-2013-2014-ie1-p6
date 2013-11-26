@@ -1,7 +1,5 @@
 package fr.iutvalence.java.mp.navalbattle;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
-import java.util.Scanner; 
+import java.util.Scanner;
 
 /**
  * main class for the naval battle game
@@ -17,6 +15,8 @@ public class Main
      * @param args
      *            : none
      */
+    // TODO (fix) you should extract the code related to the positioning of boats
+    // to another class
     public static void main(String[] args)
     {
         Boat[] boatsP1, boatsP2;
@@ -31,8 +31,7 @@ public class Main
         boatsP2 = createRandomBoats();
         NavalBattle game = new NavalBattle(boatsP1, boatsP2);
         game.play();
-        scanner.close();
-        
+        scanner.close();     
     }
 
 
@@ -53,7 +52,7 @@ public class Main
 
         for(int i=0; i < BoatLengths.length; i++)
         {
-            System.out.println("\nFirst extremity of the "+NavalBattle.BOATNAMES[i]+" (length "+BoatLengths[i]+") :");
+            System.out.println("\nFirst extremity of the "+NavalBattle.BOAT_NAMES[i]+" (length "+BoatLengths[i]+") :");
             do
             {
                 System.out.print("X:");
@@ -63,19 +62,19 @@ public class Main
                     x = (int) xTemp.charAt(0) - 64;
                 else
                     x = (int) xTemp.charAt(0) - 96;
-                if (x < 1 || x > NavalBattle.GRIDSIZE)
+                if (x < 1 || x > NavalBattle.GRID_SIZE)
                     System.out.println("Invalid X. Try again !");
-            }while (x < 1 || x > NavalBattle.GRIDSIZE);
+            }while (x < 1 || x > NavalBattle.GRID_SIZE);
             
             do
             {
                 System.out.print("Y:");
                 yTemp = coordEntry.next();
                 y = (int) yTemp.charAt(0)-48;
-                if (y < 1 || y > NavalBattle.GRIDSIZE)
+                if (y < 1 || y > NavalBattle.GRID_SIZE)
                     System.out.println("Invalid Y. Try again !");
             }
-            while (y < 1 || y > NavalBattle.GRIDSIZE);
+            while (y < 1 || y > NavalBattle.GRID_SIZE);
             
             System.out.println("You just entered : (" + x + ";" + y + ")");
             
