@@ -9,7 +9,7 @@ package fr.iutvalence.java.mp.navalbattle;
 public class Action
 {
     /**
-     * Case concerned by the operation Is specified by its XY positions
+     * Cell concerned by the operation Is specified by its XY positions
      */
     private Coordinates coordinates;
 
@@ -22,7 +22,7 @@ public class Action
      * Operation constructor
      * 
      * @param position
-     *            : X and Y positions of the played Case
+     *            : X and Y positions of the played cell
      * @param inState : the state to set
      */
     public Action(Coordinates position, PositionState inState)
@@ -32,9 +32,9 @@ public class Action
     }
 
     /**
-     * method to get the case of the operation
+     * method to get the cell of the operation
      * 
-     * @return the case of the operation
+     * @return the cell of the operation
      */
     public Coordinates getCoordinates()
     {

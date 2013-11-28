@@ -16,9 +16,10 @@ public class Player
      */
     private Boat[] boats;
 
-    // TODO (fix) detail comment
+    // TODO (fixed) detail comment
     /**
      * Player's actions
+     * Represents the cell where the player has shot
      */
     private List<Action> actions;
 
@@ -61,13 +62,13 @@ public class Player
      */
     public boolean didPlayerLoose()
     {
-        // TODO (fix) simplify and optimize
-        boolean lost = true;
+        // TODO (fixed) simplify and optimize
         for (int i = 0; i < this.boats.length; i++)
         {
-            lost = lost && this.boats[i].isSunk();
+            if (!this.boats[i].isSunk())
+                return false;
         }
-        return lost;
+        return true;
     }
     
 }

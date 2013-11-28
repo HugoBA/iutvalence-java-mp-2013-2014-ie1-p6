@@ -11,10 +11,12 @@ import java.util.Random;
 public class Boat
 {
     /**
-     * The number of positions a boat can take
+     * The number of directions a boat can take
+     *      North, South
+     *      East, West
      */
-    // TODO (fix) the purpose of this constant is not really clear (explain)
-    public final static int NB_POSITIONS = 4;
+    // TODO (fixed) the purpose of this constant is not really clear (explain)
+    public final static int NB_DIRECTIONS = 4;
     
     /**
      * Left direction value
@@ -70,7 +72,7 @@ public class Boat
     {
         Random rand = new Random();
         
-        int direction = rand.nextInt(NB_POSITIONS);
+        int direction = rand.nextInt(NB_DIRECTIONS);
         boolean able = false;
         
         this.positions = new BoatCellCoordinates[length];
@@ -131,12 +133,17 @@ public class Boat
      *                           3: to the bottom
      * 
      * @param length : length of the boat
+     //* @throws InvalidCoordinateException : Invalid cell coordinates
      */
-    public Boat(Coordinates extremity, int direction, int length)
+    public Boat(Coordinates extremity, int direction, int length) //throws InvalidCoordinateException
     {
-        //TODO make coordinates verifications
+        //TODO (fix) make coordinates verifications
         int x = extremity.getX();
         int y = extremity.getY();
+        
+        /*if (x < 0 || x > NavalBattle.GRID_SIZE 
+                || y < 0 || y > NavalBattle.GRID_SIZE)
+            throw new InvalidCoordinateException();*/
         
         this.positions = new BoatCellCoordinates[length];
 
@@ -176,7 +183,7 @@ public class Boat
      * method to check if the boat is concerned by a specific coordinate
      * 
      * @param position
-     *            : the coordinates of the case to check
+     *            : the coordinates of the cell to check
      * @return : true if the boat is present on these coordinates, false if it
      *         isn't
      */

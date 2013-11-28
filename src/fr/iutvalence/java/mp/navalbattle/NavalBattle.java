@@ -25,7 +25,8 @@ public class NavalBattle
     /**
      * table containing the names of the 5 boats of the game
      */
-    public final static String[] BOAT_NAMES = {"aircraft carrier","battleship","submarine","destroyer","patrol boat"};
+    public final static String[] BOAT_NAMES = {"aircraft carrier",
+        "battleship","submarine","destroyer","patrol boat"};
 
     /**
      * The players
@@ -55,8 +56,8 @@ public class NavalBattle
     /**
      * launches the game 
      * lets the 2 players play their turn alternatively
-     * player2 (=bot) plays randomly and automatically the cases of the naval battle game,
-     * player1 plays his own case and the updated game grid is displayed
+     * player2 (=bot) plays randomly and automatically the cells of the naval battle game,
+     * player1 plays his own cell and the updated game grid is displayed
      * the loop continues until a player wins
      */
     public void play()
@@ -80,18 +81,11 @@ public class NavalBattle
                 Thread.currentThread().interrupt();
             }
             */
-            // TODO (fix) do not make something different for woth players
+            // TODO (fixed) do not make something different for woth players
+            processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
             if (currentPlayer == PLAYER_1)
-            {
-                processPlayerShot(currentPlayer, getUserFreeCellCoordinatesToShoot(currentPlayer));
                 displayPlayerGrid(currentPlayer);
-                currentPlayer = PLAYER_2;
-            }
-            else
-            {
-                processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
-                currentPlayer = PLAYER_1;
-            }
+            currentPlayer = changePlayer(currentPlayer);
         }
         
         
@@ -156,7 +150,7 @@ public class NavalBattle
                     else
                         System.out.print("X ");
                 }
-                catch(UndefinedCaseStateException e)
+                catch(UndefinedCellException e)
                 {
                     e.printStackTrace();
                 }
@@ -172,7 +166,7 @@ public class NavalBattle
      * 
      * @param playerNumber
      *            : The number of the player
-     * @return : A non-shot case, chosen by the player
+     * @return : A non-shot cell, chosen by the player
      */
     public Coordinates getUserFreeCellCoordinatesToShoot(int playerNumber)
     {
@@ -205,11 +199,11 @@ public class NavalBattle
     
     
     /**
-     * Give a random case that the player have not played yet
+     * Give a random cell that the player have not played yet
      * 
      * @param playerNumber
      *            : The number of the player
-     * @return : A random non-shot case
+     * @return : A random non-shot cell
      */
     public Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
     {
@@ -228,8 +222,8 @@ public class NavalBattle
 
     /**
      * Method to proceed the action of a player : sets the right state to the
-     * played case (1 : water, or 2 : touched) and, if there is a boat on this
-     * case, sets the case of the boat as touched
+     * played cell (1 : water, or 2 : touched) and, if there is a boat on this
+     * cell, sets the cell of the boat as touched
      * 
      * @param playerNumber
      *            : The number of the player
@@ -259,17 +253,17 @@ public class NavalBattle
 
 
     /**
-     * Simple method to easily get the state of a case
+     * Simple method to easily get the state of a cell
      * 
      * @param playerNumber
      *            : The number of the player
      * @param coords
      *            : coordinates of the position to test
-     * @return PositionState : the state of the case
-     * @throws UndefinedCaseStateException : throw this exception if you try to access 
-     *                  to a case which is not in the list of the player's actions
+     * @return PositionState : the state of the cell
+     * @throws UndefinedCellException : throw this exception if you try to access 
+     *                  to a cell which is not in the list of the player's actions
      */
-    private PositionState getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws UndefinedCaseStateException
+    private PositionState getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws UndefinedCellException
     {
         Action actionCoords = new Action(coords, PositionState.INWATER);
         int index = this.players[playerNumber].getActions().indexOf(actionCoords);
@@ -277,7 +271,7 @@ public class NavalBattle
         if (!(index == -1))
             return this.players[playerNumber].getActions().get(index).getState();
         else 
-            throw new UndefinedCaseStateException();
+            throw new UndefinedCellException();
     }
 
     /**
@@ -301,13 +295,13 @@ public class NavalBattle
     }
 
     /**
-     * Returns the state of one case of the boat
+     * Returns the state of one cell of the boat
      * 
      * @param playerNumber
      *            : The number of the player
      * @param positionCoords
-     *            : The coordinates of the case to check
-     * @return : True if the case of the boat has been touched, else returns
+     *            : The coordinates of the cell to check
+     * @return : True if the cell of the boat has been touched, else returns
      *         false
      */
     private boolean isBoatHitAt(int playerNumber, Coordinates positionCoords)
@@ -330,12 +324,12 @@ public class NavalBattle
     }
 
     /**
-     * Sets the case of a boat on a specific position as Touched
+     * Sets the cell of a boat on a specific position as Touched
      * 
      * @param playerNumber
      *            : The number of the player
      * @param coordinates
-     *            the position of the case to set as touched
+     *            the position of the cell to set as touched
      */
     private void setBoatHitOnPlayerBoatGridAt(int playerNumber, Coordinates coordinates)
     {
@@ -364,8 +358,21 @@ public class NavalBattle
         for (int i = 0; i < this.players[otherPlayerNumber].getBoats().length; i++)
         {
             if(this.players[otherPlayerNumber].getBoats()[i].didThisBoatJustSank())
-                //TODO the following message shouldn't appear when your adversary kills your boats !
+                //TODO (fix) the following message shouldn't appear when your adversary kills your boats !
                 System.out.println("\nYou just sunk the " + BOAT_NAMES[i] + " !\n");
         }
+    }
+    
+    /**
+     * A method to change the current player 
+     * @param player : The current player
+     * @return : The other player ID
+     */
+    public int changePlayer(int player)
+    {
+        if (player == PLAYER_1)
+            return PLAYER_2;
+        else
+            return PLAYER_1;
     }
 }

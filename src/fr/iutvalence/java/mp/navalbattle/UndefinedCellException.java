@@ -1,12 +1,12 @@
 package fr.iutvalence.java.mp.navalbattle;
 
 /**
- * Exception raised when you try to access to the state of a case which does not exist
+ * Exception raised when you try to access to the state of a cell which does not exist
  * @author Quentin
  *
  */
-// TODO (fix) rename class
-public class UndefinedCaseStateException extends Exception
+// TODO (fixed) rename class
+public class UndefinedCellException extends Exception
 {
 
     /**

@@ -2,7 +2,7 @@ package fr.iutvalence.java.mp.navalbattle;
 
 // TODO (fix) fix comment
 /**
- * A BoatCase is a Coordinates plus the state of the case
+ * A BoatCase is a Coordinates plus the state of the case (sunk or not)
  * This class is only made to be used as a case of a Boat
  * @author barattoh
  *

@@ -1,7 +1,7 @@
 package fr.iutvalence.java.mp.navalbattle;
 
 /**
- * Represents a case of the game grid
+ * Represents a cell of the game grid
  * 
  * @author barattoh
  * 

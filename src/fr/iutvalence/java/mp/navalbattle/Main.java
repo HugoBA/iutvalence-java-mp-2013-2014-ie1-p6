@@ -35,7 +35,17 @@ public class Main
     }
 
 
-    
+    /* 
+     * TODO (fix) Replace Scanner by using a Stream
+     * (WARNING) Do not close System.in stream 
+     * (NOTE) Use the split method of a string (cut on a space)
+     *        Cut the String into two strings
+     *        For example : "A 10".split(' ') 
+     *          --> Return an array containing "A" & "10"
+     *        Check the length
+     */
+    //TODO (fix) Check directions : a boat can be out of the grid
+    //TODO (fix) Check collisions : a boat can be on an other
     /**
      * method to make a table of boats, created manually by the user
      * 
@@ -45,7 +55,7 @@ public class Main
     {
         int[] BoatLengths = { 5, 4, 3, 3, 2 };
         Scanner coordEntry = new Scanner(System.in);
-        int x, y;
+        int x, direction = 0;
         String xTemp, yTemp, directionTemp;
         Coordinates extremityPosition;
         Boat[] newBoat = new Boat[5];
@@ -66,11 +76,18 @@ public class Main
                     System.out.println("Invalid X. Try again !");
             }while (x < 1 || x > NavalBattle.GRID_SIZE);
             
+            int y = 0;
+            
             do
             {
+                y = 0;
                 System.out.print("Y:");
                 yTemp = coordEntry.next();
-                y = (int) yTemp.charAt(0)-48;
+                //TODO (fixed) Y can only take a value in 1..9
+                for (int i1 = 0; i1 < yTemp.length(); i1++)
+                {
+                    y += (int) (yTemp.toCharArray()[i1]-48)*Math.pow(10, yTemp.length()-i1-1);
+                }
                 if (y < 1 || y > NavalBattle.GRID_SIZE)
                     System.out.println("Invalid Y. Try again !");
             }
@@ -84,8 +101,29 @@ public class Main
             System.out.println(Boat.UP+": to the top");
             System.out.println(Boat.DOWN+": to the bottom");
 
-            //TODO (fix) not error-proof
-            int direction = coordEntry.nextInt();
+            //TODO (fixed) not error-proof
+
+            boolean invalid;
+            do
+            {
+                invalid = false;
+                System.out.println("Direction : ");
+                directionTemp = coordEntry.next();
+                if (directionTemp.length() > 1)
+                {
+                    System.out.println("Invalid direction. Try again (string size) !");
+                    invalid = true;
+                }
+                else
+                {
+                    direction = (int) directionTemp.charAt(0)-48;
+                    if (direction < 0 || direction > Boat.NB_DIRECTIONS)
+                    {
+                        System.out.println("Invalid direction. Try again !");
+                        invalid = true;
+                    }
+                }
+            }while(invalid);
                 
             
             extremityPosition = new Coordinates(x-1, y-1);
