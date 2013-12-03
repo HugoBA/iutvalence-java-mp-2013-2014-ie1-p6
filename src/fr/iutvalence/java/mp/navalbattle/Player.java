@@ -16,12 +16,13 @@ public class Player
      */
     private Boat[] boats;
 
-    // TODO (fixed) detail comment
     /**
      * Player's actions
-     * Represents the cell where the player has shot
+     * Represents the cells where the player has shot
      */
-    private List<Action> actions;
+    // TODO (fix) once a boat is sunk, the position states of already played
+    // shots, marked as touched, must be updated to "sunk"
+    private List<Shot> shots;
 
     /**
      * Constructor for a player
@@ -32,7 +33,7 @@ public class Player
      */
     public Player(Boat[] playerBoats)
     {
-        this.actions =  new LinkedList<Action>();
+        this.shots =  new LinkedList<Shot>();
         this.boats = playerBoats;
     }
 
@@ -47,12 +48,12 @@ public class Player
     }
 
     /**
-     * returns the Action table of the player
-     * @return the action table
+     * returns the list of shots already performed by the player
+     * @return the list of shots already peformed by player
      */
-    public List<Action> getActions()
+    public List<Shot> getShots()
     {
-        return this.actions;
+        return this.shots;
     }
 
     /**
@@ -62,7 +63,6 @@ public class Player
      */
     public boolean didPlayerLoose()
     {
-        // TODO (fixed) simplify and optimize
         for (int i = 0; i < this.boats.length; i++)
         {
             if (!this.boats[i].isSunk())

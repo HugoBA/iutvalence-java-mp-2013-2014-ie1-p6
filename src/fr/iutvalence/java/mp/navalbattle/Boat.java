@@ -15,7 +15,6 @@ public class Boat
      *      North, South
      *      East, West
      */
-    // TODO (fixed) the purpose of this constant is not really clear (explain)
     public final static int NB_DIRECTIONS = 4;
     
     /**

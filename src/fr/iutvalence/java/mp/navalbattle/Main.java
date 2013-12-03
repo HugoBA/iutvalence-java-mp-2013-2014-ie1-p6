@@ -83,7 +83,6 @@ public class Main
                 y = 0;
                 System.out.print("Y:");
                 yTemp = coordEntry.next();
-                //TODO (fixed) Y can only take a value in 1..9
                 for (int i1 = 0; i1 < yTemp.length(); i1++)
                 {
                     y += (int) (yTemp.toCharArray()[i1]-48)*Math.pow(10, yTemp.length()-i1-1);
@@ -100,8 +99,6 @@ public class Main
             System.out.println(Boat.RIGHT+": to the right");
             System.out.println(Boat.UP+": to the top");
             System.out.println(Boat.DOWN+": to the bottom");
-
-            //TODO (fixed) not error-proof
 
             boolean invalid;
             do

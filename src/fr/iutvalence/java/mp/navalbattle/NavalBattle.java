@@ -81,7 +81,7 @@ public class NavalBattle
                 Thread.currentThread().interrupt();
             }
             */
-            // TODO (fixed) do not make something different for woth players
+           
             processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
             if (currentPlayer == PLAYER_1)
                 displayPlayerGrid(currentPlayer);
@@ -142,10 +142,10 @@ public class NavalBattle
                 position = new Coordinates(i, j);
                 try
                 {
-                    Action actionPostion = new Action(position, PositionState.INWATER);
-                    if (this.players[playerNumber].getActions().indexOf(actionPostion) == -1)
+                    Shot actionPostion = new Shot(position, ShotResult.IN_WATER);
+                    if (this.players[playerNumber].getShots().indexOf(actionPostion) == -1)
                         System.out.print("¤ ");
-                    else if (getCellStateFromPlayerShotGrid(playerNumber, position) == PositionState.INWATER)
+                    else if (getCellStateFromPlayerShotGrid(playerNumber, position) == ShotResult.IN_WATER)
                         System.out.print("+ ");
                     else
                         System.out.print("X ");
@@ -168,13 +168,14 @@ public class NavalBattle
      *            : The number of the player
      * @return : A non-shot cell, chosen by the player
      */
+    // TODO (fix) this should not be public
     public Coordinates getUserFreeCellCoordinatesToShoot(int playerNumber)
     {
         Scanner coordEntry = new Scanner(System.in);
         Coordinates userXY;
         String xTemp;
         int x, y;
-        Action actionPos;
+        Shot actionPos;
         do
         {
             System.out.println("Coordinates to shoot :");
@@ -188,9 +189,9 @@ public class NavalBattle
             y = Integer.parseInt(coordEntry.next());
             System.out.println("You just entered : (" + x + ";" + y + ")\n");
             userXY = new Coordinates(x-1, y-1);
-            actionPos = new Action(userXY, PositionState.INWATER);
+            actionPos = new Shot(userXY, ShotResult.IN_WATER);
         }
-        while (!(this.players[playerNumber].getActions().indexOf(actionPos) == -1));
+        while (!(this.players[playerNumber].getShots().indexOf(actionPos) == -1));
 
         coordEntry.close();
         return actionPos.getCoordinates();
@@ -205,17 +206,18 @@ public class NavalBattle
      *            : The number of the player
      * @return : A random non-shot cell
      */
+    // TODO (fix) this should not be public
     public Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
     {
         Random rand = new Random();
-        Action randomPos;
+        Shot randomPos;
         do
         {
-            randomPos = new Action(
+            randomPos = new Shot(
                     new Coordinates(rand.nextInt(GRID_SIZE), 
-                            rand.nextInt(GRID_SIZE)), PositionState.INWATER);
+                            rand.nextInt(GRID_SIZE)), ShotResult.IN_WATER);
         }
-        while (!(this.players[playerNumber].getActions().indexOf(randomPos) == -1));
+        while (!(this.players[playerNumber].getShots().indexOf(randomPos) == -1));
 
         return randomPos.getCoordinates();
     }
@@ -238,17 +240,17 @@ public class NavalBattle
         else
             otherPlayerNumber=PLAYER_1;
         
-        PositionState actionState;
+        ShotResult actionState;
         if (isBoatOnPlayerBoatGridAt(otherPlayerNumber, coordinates))
         {
-            actionState = PositionState.ONBOAT;
+            actionState = ShotResult.TOUCHED;
             setBoatHitOnPlayerBoatGridAt(otherPlayerNumber, coordinates);
             didBoatSink(otherPlayerNumber);
         }
         else
-            actionState = PositionState.INWATER;
+            actionState = ShotResult.IN_WATER;
 
-        this.players[playerNumber].getActions().add(new Action(coordinates, actionState));
+        this.players[playerNumber].getShots().add(new Shot(coordinates, actionState));
     }
 
 
@@ -263,13 +265,13 @@ public class NavalBattle
      * @throws UndefinedCellException : throw this exception if you try to access 
      *                  to a cell which is not in the list of the player's actions
      */
-    private PositionState getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws UndefinedCellException
+    private ShotResult getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws UndefinedCellException
     {
-        Action actionCoords = new Action(coords, PositionState.INWATER);
-        int index = this.players[playerNumber].getActions().indexOf(actionCoords);
+        Shot actionCoords = new Shot(coords, ShotResult.IN_WATER);
+        int index = this.players[playerNumber].getShots().indexOf(actionCoords);
         
         if (!(index == -1))
-            return this.players[playerNumber].getActions().get(index).getState();
+            return this.players[playerNumber].getShots().get(index).getState();
         else 
             throw new UndefinedCellException();
     }
@@ -368,6 +370,7 @@ public class NavalBattle
      * @param player : The current player
      * @return : The other player ID
      */
+    // TODO (fix) this should not be public
     public int changePlayer(int player)
     {
         if (player == PLAYER_1)

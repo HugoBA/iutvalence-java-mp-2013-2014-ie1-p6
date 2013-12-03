@@ -4,7 +4,7 @@ package fr.iutvalence.java.mp.navalbattle;
  * Enum type for the different states of a position on the Action table
  * @author barattoh
  */
-public enum PositionState
+public enum ShotResult
 {
     /**
      * The player shot on a boat and sunk this one
@@ -13,11 +13,11 @@ public enum PositionState
     /**
      * The player shot on a boat, but the latter hasn't been sunk yet
      */
-    ONBOAT, 
+    TOUCHED, 
     /**
      * The player shot in water
      */
-    INWATER;
+    IN_WATER;
 
     @Override
     public String toString()
@@ -27,10 +27,10 @@ public enum PositionState
         case SUNK:
             
             return "S";
-        case ONBOAT:
+        case TOUCHED:
             
             return "T";
-        case INWATER:
+        case IN_WATER:
         default:
             return " ";
          }

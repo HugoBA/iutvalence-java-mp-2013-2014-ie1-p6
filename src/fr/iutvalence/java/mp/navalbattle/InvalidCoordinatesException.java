@@ -5,7 +5,7 @@ package fr.iutvalence.java.mp.navalbattle;
  * @author Quentin
  *
  */
-public class InvalidCoordinateException extends Exception
+public class InvalidCoordinatesException extends Exception
 {
 
     /**

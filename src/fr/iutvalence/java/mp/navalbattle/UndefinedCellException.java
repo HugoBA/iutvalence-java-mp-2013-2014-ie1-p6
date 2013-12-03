@@ -5,7 +5,7 @@ package fr.iutvalence.java.mp.navalbattle;
  * @author Quentin
  *
  */
-// TODO (fixed) rename class
+// TODO (fix) remove this and use InvalidCoordinatesException instead
 public class UndefinedCellException extends Exception
 {
 

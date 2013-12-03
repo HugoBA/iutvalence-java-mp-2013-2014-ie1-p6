@@ -1,34 +1,34 @@
 package fr.iutvalence.java.mp.navalbattle;
 
 /**
- * Represents an operation made by the player
+ * Represents a shot (for history management)
  * 
  * @author Hugo
  */
 
-public class Action
+public class Shot
 {
     /**
-     * Cell concerned by the operation Is specified by its XY positions
+     * Position of the shot
      */
     private Coordinates coordinates;
 
     /**
-     * State of the operation 
+     * Result of the shot
      */
-    private PositionState state;
+    private ShotResult state;
 
     /**
      * Operation constructor
      * 
-     * @param position
-     *            : X and Y positions of the played cell
-     * @param inState : the state to set
+     * @param coordinates
+     *            position of the shot
+     * @param shotResult result of the shot
      */
-    public Action(Coordinates position, PositionState inState)
+    public Shot(Coordinates coordinates, ShotResult shotResult)
     {
-        this.coordinates = position;
-        this.state = inState;
+        this.coordinates = coordinates;
+        this.state = shotResult;
     }
 
     /**
@@ -46,7 +46,7 @@ public class Action
      * 
      * @return integer, the state of the operation
      */
-    public PositionState getState()
+    public ShotResult getState()
     {
         return this.state;
     }
@@ -57,7 +57,7 @@ public class Action
      * @param State
      *            : the new state of the operation
      */
-    public void setState(PositionState State)
+    public void setState(ShotResult State)
     {
         this.state = State;
     }
@@ -79,7 +79,7 @@ public class Action
             return true;
         if (o == null)
             return false;
-        Action tmp = (Action) o;
+        Shot tmp = (Shot) o;
         return this.coordinates.equals(tmp.coordinates);
     }
 
