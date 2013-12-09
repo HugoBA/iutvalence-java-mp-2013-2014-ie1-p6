@@ -1,5 +1,8 @@
 package fr.iutvalence.java.mp.navalbattle;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 /**
  * main class for the naval battle game
@@ -9,6 +12,7 @@ import java.util.Scanner;
 
 public class Main
 {
+    static OutputConsole Output = new OutputConsole();
     /**
      * Main method, sets the settings of the players and launches the games
      * Asks the user if he wants to create his boats himself, or if he lets the computer handle it for him
@@ -20,23 +24,21 @@ public class Main
     public static void main(String[] args)
     {
         Boat[] boatsP1, boatsP2;
-        Scanner scanner = new Scanner(System.in);
         
-        System.out.println("Do you want to create your own boats ? [yes]");
-        if(!scanner.next().equals("yes"))
+        Output.display("Do you want to create your own boats ? [yes]");
+        if(!inputDataFromKeyboard().equals("yes"))
             boatsP1 = createRandomBoats();
         else
             boatsP1 = createUserBoats();
         
         boatsP2 = createRandomBoats();
-        NavalBattle game = new NavalBattle(boatsP1, boatsP2);
-        game.play();
-        scanner.close();     
+        NavalBattle game = new NavalBattle(boatsP1, boatsP2, "console");
+        game.play();     
     }
 
 
     /* 
-     * TODO (fix) Replace Scanner by using a Stream
+     * TODO (fixed) Replace Scanner by using a Stream
      * (WARNING) Do not close System.in stream 
      * (NOTE) Use the split method of a string (cut on a space)
      *        Cut the String into two strings
@@ -54,79 +56,78 @@ public class Main
     public static Boat[] createUserBoats()
     {
         int[] BoatLengths = { 5, 4, 3, 3, 2 };
-        Scanner coordEntry = new Scanner(System.in);
-        int x, direction = 0;
-        String xTemp, yTemp, directionTemp;
+
+        int x, y=0, direction = 0;
+        String coordTemp;
         Coordinates extremityPosition;
         Boat[] newBoat = new Boat[5];
 
+
         for(int i=0; i < BoatLengths.length; i++)
         {
-            System.out.println("\nFirst extremity of the "+NavalBattle.BOAT_NAMES[i]+" (length "+BoatLengths[i]+") :");
+            Output.display("\nFirst extremity of the "+NavalBattle.BOAT_NAMES[i]+" (length "+BoatLengths[i]+") :");
             do
             {
-                System.out.print("X:");
-                xTemp = coordEntry.next();
+                coordTemp = inputDataFromKeyboard();
+                y = x = -1; 
             
-                if(xTemp.charAt(0) - 96 <0)
-                    x = (int) xTemp.charAt(0) - 64;
+                if(coordTemp.split(" ")[0].charAt(0) - 96 <0)
+                    x = (int) coordTemp.split(" ")[0].charAt(0) - 64;
                 else
-                    x = (int) xTemp.charAt(0) - 96;
+                    x = (int) coordTemp.split(" ")[0].charAt(0) - 96;
                 if (x < 1 || x > NavalBattle.GRID_SIZE)
-                    System.out.println("Invalid X. Try again !");
-            }while (x < 1 || x > NavalBattle.GRID_SIZE);
-            
-            int y = 0;
-            
-            do
-            {
-                y = 0;
-                System.out.print("Y:");
-                yTemp = coordEntry.next();
-                for (int i1 = 0; i1 < yTemp.length(); i1++)
+                    Output.display("Invalid X. Try again !");
+                
+                try 
                 {
-                    y += (int) (yTemp.toCharArray()[i1]-48)*Math.pow(10, yTemp.length()-i1-1);
+                    y = Integer.parseInt(coordTemp.split(" ")[1]);
                 }
-                if (y < 1 || y > NavalBattle.GRID_SIZE)
-                    System.out.println("Invalid Y. Try again !");
-            }
-            while (y < 1 || y > NavalBattle.GRID_SIZE);
+                catch (NumberFormatException e)
+                {
+                    Output.display("Don't try to enter a number instead of a letter");
+                }
+                catch (ArrayIndexOutOfBoundsException e)
+                {
+                    Output.display("You should separate the coordinates by a space");
+                }
+                
+            }while (x < 1 || x > NavalBattle.GRID_SIZE || y < 1 || y > NavalBattle.GRID_SIZE);
             
-            System.out.println("You just entered : (" + x + ";" + y + ")");
             
-            System.out.println("Now choose a direction:");
-            System.out.println(Boat.LEFT+": to the left");
-            System.out.println(Boat.RIGHT+": to the right");
-            System.out.println(Boat.UP+": to the top");
-            System.out.println(Boat.DOWN+": to the bottom");
+            Output.display("You just entered : (" + x + ";" + y + ")");
+            
+            Output.display("Now choose a direction:");
+            Output.display(Boat.LEFT+": to the left");
+            Output.display(Boat.RIGHT+": to the right");
+            Output.display(Boat.UP+": to the top");
+            Output.display(Boat.DOWN+": to the bottom");
 
             boolean invalid;
             do
             {
                 invalid = false;
-                System.out.println("Direction : ");
-                directionTemp = coordEntry.next();
-                if (directionTemp.length() > 1)
+                Output.display("Direction : ");
+                try 
                 {
-                    System.out.println("Invalid direction. Try again (string size) !");
+                    direction = Integer.parseInt(inputDataFromKeyboard());
+                }
+                catch (NumberFormatException e)
+                {
+                    Output.display("Invalid direction. Try again !");
                     invalid = true;
                 }
-                else
+                
+                if (direction < 0 || direction > Boat.NB_DIRECTIONS-1)
                 {
-                    direction = (int) directionTemp.charAt(0)-48;
-                    if (direction < 0 || direction > Boat.NB_DIRECTIONS)
-                    {
-                        System.out.println("Invalid direction. Try again !");
-                        invalid = true;
-                    }
+                    Output.display("Invalid direction. Try again !");
+                    invalid = true;
                 }
-            }while(invalid);
+            } while(invalid);
                 
             
             extremityPosition = new Coordinates(x-1, y-1);
             newBoat[i] = new Boat(extremityPosition, direction, BoatLengths[i]);
         }
-        coordEntry.close();
         return newBoat;
     }
     
@@ -182,5 +183,34 @@ public class Main
             res = res || PlayerBoats[i].isOnPosition(positionCoords);
         return res;
     }
+    
+    /**
+     * Method to get a string from keyboard entry
+     * @return String : what the user entered
+     */
+    public static String inputDataFromKeyboard()
+    {
+        InputStreamReader keyboardIn = null;
+        try
+        {
+            keyboardIn = new InputStreamReader(System.in, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e1)
+        {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        BufferedReader br = new BufferedReader(keyboardIn);
+        String returnString = null;
+        try
+        {
+            returnString = br.readLine();
+        }
+        catch (IOException e) 
+        {
+            Output.display("Input error...");
+        }
+        return returnString;
+     }
 
 }

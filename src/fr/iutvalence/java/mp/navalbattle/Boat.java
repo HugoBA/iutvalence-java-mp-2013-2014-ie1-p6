@@ -136,7 +136,6 @@ public class Boat
      */
     public Boat(Coordinates extremity, int direction, int length) //throws InvalidCoordinateException
     {
-        //TODO (fix) make coordinates verifications
         int x = extremity.getX();
         int y = extremity.getY();
         

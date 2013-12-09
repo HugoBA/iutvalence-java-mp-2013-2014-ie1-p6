@@ -46,14 +46,14 @@ public class NavalBattle
      * @param player2Boats
      *            : table containing the boats of Player2
      */
-    public NavalBattle(Boat[] player1Boats, Boat[] player2Boats)
+    public NavalBattle(Boat[] player1Boats, Boat[] player2Boats, String displayMode)
     {
         this.players = new Player[2];
-        this.players[0] = new Player(player1Boats);
-        this.players[1] = new Player(player2Boats);
+        this.players[0] = new Player(player1Boats, displayMode);
+        this.players[1] = new Player(player2Boats, displayMode);
     }
 
-    /**
+    /**Output
      * launches the game 
      * lets the 2 players play their turn alternatively
      * player2 (=bot) plays randomly and automatically the cells of the naval battle game,
@@ -64,24 +64,10 @@ public class NavalBattle
     {
         int currentPlayer = PLAYER_1;
         
-        System.out.println("\nLet's play !\n");
+        Output.display("\nLet's play !\n");
         displayPlayerGrid(PLAYER_1);
         while (!(this.players[currentPlayer].didPlayerLoose()))
         {
-            /*
-            displayPlayerGrid(currentPlayer);
-            processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
-
-            try
-            {
-                Thread.sleep(50);
-            }
-            catch (InterruptedException e)
-            {
-                Thread.currentThread().interrupt();
-            }
-            */
-           
             processPlayerShot(currentPlayer, getRandomFreeCellCoordinatesFromPlayerShotGrid(currentPlayer));
             if (currentPlayer == PLAYER_1)
                 displayPlayerGrid(currentPlayer);
@@ -89,14 +75,14 @@ public class NavalBattle
         }
         
         
-        System.out.println("\nFinal lay-out : \n");
+        Output.display("\nFinal lay-out : \n");
         displayPlayerGrid(PLAYER_1);
         displayPlayerGrid(PLAYER_2);
         
         if (this.players[PLAYER_1].didPlayerLoose())
-            System.out.println("Player 2 won!");
+            Output.display("Player 2 won!");
         else
-            System.out.println("Player 1 won!");
+            Output.display("Player 1 won!");
 
     }
 
@@ -109,55 +95,65 @@ public class NavalBattle
     private void displayPlayerGrid(int playerNumber)
     {
         int i, j;
+        String[][] boatsPositions = new String[GRID_SIZE+1][GRID_SIZE+1];
+        String[][] actionsTable = new String[GRID_SIZE+1][GRID_SIZE+1];
         Coordinates position;
-
-        System.out.println("   A B C D E F G H I J        A B C D E F G H I J");
+        
+        boatsPositions[0][0] = "  ";
+        actionsTable[0][0] = "  ";
+        
+        for (i=0;i< GRID_SIZE; i++)
+        {
+            boatsPositions[0][i+1] = (char) (i+65)+"";
+            actionsTable[0][i+1] = (char) (i+65)+"";
+        }
+        
         for (j = 0; j < GRID_SIZE; j++)
         {
-            if (j + 1 < GRID_SIZE)
-                System.out.print(" " + (j + 1) + " ");
-            else
-                System.out.print((j + 1) + " ");
-            for (i = 0; i < GRID_SIZE; i++)
+            if (j < 9)
             {
-                position = new Coordinates(i, j);
+                boatsPositions[j+1][0] = String.valueOf(j+1) + " ";
+                actionsTable[j+1][0] = String.valueOf(j+1) + " ";
+            }
+            else
+            {
+                boatsPositions[j+1][0] = String.valueOf(j+1);
+                actionsTable[j+1][0] = String.valueOf(j+1);
+            }
+        }
+        
+        for (j = 1; j < GRID_SIZE+1; j++)
+        {
+            for (i = 1; i < GRID_SIZE+1; i++)
+            {
+                position = new Coordinates(i - 1, j - 1);
                 if (isBoatOnPlayerBoatGridAt(playerNumber, position))
                 {
                     if (isBoatHitAt(playerNumber, position))
-                        System.out.print("X ");
+                        boatsPositions[i][j] = "X";
                     else
-                        System.out.print("O ");
+                        boatsPositions[i][j] = "O";
                 }
                 else
-                    System.out.print("¤ ");
-            }
-
-            System.out.print("    ");
-            if (j + 1 < GRID_SIZE)
-                System.out.print(" " + (j + 1) + " ");
-            else
-                System.out.print((j + 1) + " ");
-            for (i = 0; i < GRID_SIZE; i++)
-            {
-                position = new Coordinates(i, j);
+                    boatsPositions[i][j] = "¤";
+                
                 try
                 {
                     Shot actionPostion = new Shot(position, ShotResult.IN_WATER);
                     if (this.players[playerNumber].getShots().indexOf(actionPostion) == -1)
-                        System.out.print("¤ ");
+                        actionsTable[i][j] = "¤";
                     else if (getCellStateFromPlayerShotGrid(playerNumber, position) == ShotResult.IN_WATER)
-                        System.out.print("+ ");
+                        actionsTable[i][j] = "+";
                     else
-                        System.out.print("X ");
+                        actionsTable[i][j] = "X";
                 }
-                catch(UndefinedCellException e)
+                catch(InvalidCoordinatesException e)
                 {
                     e.printStackTrace();
                 }
             }
-            System.out.println("");
         }
-        System.out.println("");
+        Output.displayPlayerGrid(boatsPositions, actionsTable);
     }
 
     
@@ -168,8 +164,8 @@ public class NavalBattle
      *            : The number of the player
      * @return : A non-shot cell, chosen by the player
      */
-    // TODO (fix) this should not be public
-    public Coordinates getUserFreeCellCoordinatesToShoot(int playerNumber)
+    // TODO (fixed) this should not be public
+    private Coordinates getUserFreeCellCoordinatesToShoot(int playerNumber)
     {
         Scanner coordEntry = new Scanner(System.in);
         Coordinates userXY;
@@ -178,7 +174,7 @@ public class NavalBattle
         Shot actionPos;
         do
         {
-            System.out.println("Coordinates to shoot :");
+            Output.display("Coordinates to shoot :");
             System.out.print("X:");
             xTemp = coordEntry.next();
             if(xTemp.charAt(0) - 96 <0)
@@ -187,7 +183,7 @@ public class NavalBattle
                 x = (int) xTemp.charAt(0) - 96;
             System.out.print("Y:");
             y = Integer.parseInt(coordEntry.next());
-            System.out.println("You just entered : (" + x + ";" + y + ")\n");
+            Output.display("You just entered : (" + x + ";" + y + ")\n");
             userXY = new Coordinates(x-1, y-1);
             actionPos = new Shot(userXY, ShotResult.IN_WATER);
         }
@@ -206,8 +202,8 @@ public class NavalBattle
      *            : The number of the player
      * @return : A random non-shot cell
      */
-    // TODO (fix) this should not be public
-    public Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
+    // TODO (fixed) this should not be public
+    private Coordinates getRandomFreeCellCoordinatesFromPlayerShotGrid(int playerNumber)
     {
         Random rand = new Random();
         Shot randomPos;
@@ -262,10 +258,10 @@ public class NavalBattle
      * @param coords
      *            : coordinates of the position to test
      * @return PositionState : the state of the cell
-     * @throws UndefinedCellException : throw this exception if you try to access 
+     * @throws InvalidCoordinatesException : throw this exception if you try to access 
      *                  to a cell which is not in the list of the player's actions
      */
-    private ShotResult getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws UndefinedCellException
+    private ShotResult getCellStateFromPlayerShotGrid(int playerNumber, Coordinates coords) throws InvalidCoordinatesException
     {
         Shot actionCoords = new Shot(coords, ShotResult.IN_WATER);
         int index = this.players[playerNumber].getShots().indexOf(actionCoords);
@@ -273,7 +269,7 @@ public class NavalBattle
         if (!(index == -1))
             return this.players[playerNumber].getShots().get(index).getState();
         else 
-            throw new UndefinedCellException();
+            throw new InvalidCoordinatesException();
     }
 
     /**
@@ -361,7 +357,7 @@ public class NavalBattle
         {
             if(this.players[otherPlayerNumber].getBoats()[i].didThisBoatJustSank())
                 //TODO (fix) the following message shouldn't appear when your adversary kills your boats !
-                System.out.println("\nYou just sunk the " + BOAT_NAMES[i] + " !\n");
+                Output.display("\nYou just sunk the " + BOAT_NAMES[i] + " !\n");
         }
     }
     
@@ -370,8 +366,8 @@ public class NavalBattle
      * @param player : The current player
      * @return : The other player ID
      */
-    // TODO (fix) this should not be public
-    public int changePlayer(int player)
+    // TODO (fixed) this should not be public
+    private int changePlayer(int player)
     {
         if (player == PLAYER_1)
             return PLAYER_2;

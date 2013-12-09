@@ -12,6 +12,10 @@ import java.util.LinkedList;
 public class Player
 {
     /**
+     * Chosen output for the player
+     */
+    public Output playerOutput;
+    /**
      * Player's boats
      */
     private Boat[] boats;
@@ -31,10 +35,13 @@ public class Player
      *            : The boats of the player Initialize the table of the Player's
      *            actions (empty)
      */
-    public Player(Boat[] playerBoats)
+    public Player(Boat[] playerBoats, String graphicsMode)
     {
         this.shots =  new LinkedList<Shot>();
         this.boats = playerBoats;
+        
+        if (graphicsMode.equals("console"))
+            this.playerOutput = new OutputConsole();
     }
 
     /**
